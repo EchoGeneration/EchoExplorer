@@ -7,8 +7,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.io.IOException;
-
 public class PlaySound extends Service {
     private final static String TAG = "PlaySoundService";
     private final IBinder mBinder = new PlayAudioBinder();
