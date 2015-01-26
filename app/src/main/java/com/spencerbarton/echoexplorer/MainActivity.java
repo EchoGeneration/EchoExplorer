@@ -72,9 +72,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void playAudio(View view) {
-        Log.d("logging", "Playing audio");
         if (mBound) {
-            Log.d("logging", "Device is bound");
             mService.playAudio();
         }
     }
@@ -85,7 +83,6 @@ public class MainActivity extends ActionBarActivity {
             PlaySound.PlayAudioBinder binder = (PlaySound.PlayAudioBinder) service;
             mService = binder.getService();
             mBound = true;
-            Log.d("logging", "Service Connected");
         }
 
         @Override

@@ -16,7 +16,6 @@ public class PlaySound extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.e(TAG,"Binding service");
         initAudio(intent);
         return mBinder;
     }
@@ -28,10 +27,9 @@ public class PlaySound extends Service {
 
     public void playAudio() {
         try {
-            Log.d(TAG, "Starting Audio");
             mMediaPlayer.start();
         } catch (IllegalStateException e) {
-            Log.e(TAG, "Audio bug:" + e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -52,8 +50,6 @@ public class PlaySound extends Service {
     private void initAudio(Intent intent) {
         int audioFile = intent.getIntExtra(MainActivity.EXTRA_AUDIO, 0);
         mMediaPlayer = MediaPlayer.create(this, audioFile);
-        Log.d(TAG, "Created Media player, got audio file");
-        Log.d(TAG, "audioFile:"+String.valueOf(audioFile));
 
         // Register termination
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
