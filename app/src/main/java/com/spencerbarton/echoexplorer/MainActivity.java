@@ -27,12 +27,10 @@ public class MainActivity extends ActionBarActivity {
 
         // Setup audio to be controlled by the user
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        Log.d("logging", "onCreate called");
     }
 
     @Override
     protected void onStart() {
-        Log.d("logging", "onStart called");
         super.onStart();
 
         // Bind audio service

@@ -28,12 +28,10 @@ public class PlaySound extends Service {
 
     public void playAudio() {
         try {
-            Log.d(TAG, "Preparing Audio");
-            mMediaPlayer.prepare();
             Log.d(TAG, "Starting Audio");
             mMediaPlayer.start();
-        } catch (IllegalStateException | IOException e) {
-            Log.e(TAG, "7777:" + e.getMessage());
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "Audio bug:" + e.getMessage());
         }
     }
 
