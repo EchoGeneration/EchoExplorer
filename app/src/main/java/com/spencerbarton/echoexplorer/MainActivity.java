@@ -1,19 +1,55 @@
 package com.spencerbarton.echoexplorer;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.media.AudioManager;
+import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class MainActivity extends ActionBarActivity {
+    private PlaySound mService;
+    private boolean mBound = false;
+    public static String EXTRA_AUDIO = "com.spencerbarton.echoexplorer.AUDIO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Initialize
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Setup audio to be controlled by the user
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        Log.d("logging", "onCreate called");
     }
 
+    @Override
+    protected void onStart() {
+        Log.d("logging", "onStart called");
+        super.onStart();
+
+        // Bind audio service
+        Intent intent = new Intent(this, PlaySound.class);
+        intent.putExtra(EXTRA_AUDIO, R.raw.song);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -36,4 +72,28 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void playAudio(View view) {
+        Log.d("logging", "Playing audio");
+        if (mBound) {
+            Log.d("logging", "Device is bound");
+            mService.playAudio();
+        }
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            PlaySound.PlayAudioBinder binder = (PlaySound.PlayAudioBinder) service;
+            mService = binder.getService();
+            mBound = true;
+            Log.d("logging", "Service Connected");
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mBound = false;
+        }
+    };
+
 }
