@@ -15,6 +15,7 @@ import android.view.View;
 
 import java.lang.reflect.Array;
 
+// TODO audio not stopping on exit
 
 public class MainActivity extends ActionBarActivity {
     private PlaySound mService;

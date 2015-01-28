@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Handler;
 import android.util.Log;
 
 public class PlaySound extends Service {
     private final static String TAG = "PlaySoundService";
+    private final static int ECHO_DELAY = 500; // ms
     private final IBinder mBinder = new PlayAudioBinder();
     private MediaPlayer mMediaPlayer;
 
@@ -53,7 +55,17 @@ public class PlaySound extends Service {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     stopAudio();
-                    playAudioFiles(audioFiles);
+                    mNumAudioPlayed++;
+
+                    // Delay between echos
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            playAudioFiles(audioFiles);
+                        }
+                    }, ECHO_DELAY);
+
                 }
             });
             mMediaPlayer.start();
