@@ -13,10 +13,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.lang.reflect.Array;
+
 
 public class MainActivity extends ActionBarActivity {
     private PlaySound mService;
     private boolean mBound = false;
+    private int[] mEchos = {R.raw.echos_1, R.raw.echos_2, R.raw.echos_3, R.raw.echos_4,
+            R.raw.echos_5, R.raw.echos_6, R.raw.echos_7, R.raw.echos_8, R.raw.echos_9,
+            R.raw.echos_10};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
         super.onStop();
 
         if (mBound) {
+            mService.stopAudio();
             unbindService(mConnection);
             mBound = false;
         }
@@ -61,7 +67,6 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -72,6 +77,12 @@ public class MainActivity extends ActionBarActivity {
     public void playAudio(View view) {
         if (mBound) {
             mService.playAudio(R.raw.song);
+        }
+    }
+
+    public void playEchos(View view) {
+        if (mBound) {
+            mService.playAudioFiles(mEchos);
         }
     }
 
