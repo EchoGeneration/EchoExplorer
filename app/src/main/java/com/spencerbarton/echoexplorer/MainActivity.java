@@ -17,7 +17,6 @@ import android.view.View;
 public class MainActivity extends ActionBarActivity {
     private PlaySound mService;
     private boolean mBound = false;
-    public static String EXTRA_AUDIO = "com.spencerbarton.echoexplorer.AUDIO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,6 @@ public class MainActivity extends ActionBarActivity {
 
         // Bind audio service
         Intent intent = new Intent(this, PlaySound.class);
-        intent.putExtra(EXTRA_AUDIO, R.raw.song);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -73,7 +71,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void playAudio(View view) {
         if (mBound) {
-            mService.playAudio();
+            mService.playAudio(R.raw.song);
         }
     }
 
