@@ -28,11 +28,20 @@
         <activity
             android:name=".TutorialsMenuActivity"
             android:label="@string/title_activity_tutorials_menu"
-            android:parentActivityName="com.spencerbarton.echoexplorer.MainActivity" >
+            android:parentActivityName=".MainActivity" >
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.spencerbarton.echoexplorer.MainActivity" />
+        </activity>
+        <activity
+            android:name=".TutorialActivity"
+            android:label="@string/title_activity_tutorial"
+            android:parentActivityName=".TutorialsMenuActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.spencerbarton.echoexplorer.TutorialsMenuActivity" />
         </activity>
     </application>
 

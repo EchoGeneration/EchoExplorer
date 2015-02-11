@@ -10,5 +10,9 @@
     <string name="title_activity_tutorials_menu">Tutorials</string>
     <string name="tutorials_menu_header">Tutorials</string>
     <string name="tutorials_menu_directions">Select any tutorial to begin. It is recommended that you take tutorials in order.</string>
+    <string name="title_activity_tutorial">TutorialActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="tutorial_title_default">Tutorial Title</string>
+    <string name="echo_btn_desc">echo button</string>
 
 </resources>

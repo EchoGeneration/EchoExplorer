@@ -30,9 +30,10 @@ import java.util.List;
 public class TutorialsMenuActivity extends ActionBarActivity {
 
     private static final String TAG = "TutorialsMenuActivity";
+    public static final String EXTRA_TUTORIAL_NAME = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_NAME";
 
     //----------------------------------------------------------------------------------------------
-    // State management
+    // Startup
     //----------------------------------------------------------------------------------------------
 
     @Override
@@ -65,6 +66,17 @@ public class TutorialsMenuActivity extends ActionBarActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_generic, menu);
+        return true;
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // ListView Adapter
+    //----------------------------------------------------------------------------------------------
+
     private class StableArrayAdapter extends ArrayAdapter<String> {
 
         HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
@@ -89,20 +101,5 @@ public class TutorialsMenuActivity extends ActionBarActivity {
         }
 
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_generic, menu);
-        return true;
-    }
-
-    //----------------------------------------------------------------------------------------------
-    // Loader handlers
-    //----------------------------------------------------------------------------------------------
-
-
-
 
 }
