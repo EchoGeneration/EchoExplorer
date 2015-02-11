@@ -18,11 +18,15 @@ import java.lang.reflect.Array;
 // TODO audio not stopping on exit
 
 public class MainActivity extends ActionBarActivity {
-    private PlaySound mService;
+    private PlayAudioService mService;
     private boolean mBound = false;
     private int[] mEchos = {R.raw.echos_1, R.raw.echos_2, R.raw.echos_3, R.raw.echos_4,
             R.raw.echos_5, R.raw.echos_6, R.raw.echos_7, R.raw.echos_8, R.raw.echos_9,
             R.raw.echos_10};
+
+    //----------------------------------------------------------------------------------------------
+    // State management
+    //----------------------------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,7 @@ public class MainActivity extends ActionBarActivity {
         super.onStart();
 
         // Bind audio service
-        Intent intent = new Intent(this, PlaySound.class);
+        Intent intent = new Intent(this, PlayAudioService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -53,6 +57,10 @@ public class MainActivity extends ActionBarActivity {
             mBound = false;
         }
     }
+
+    //----------------------------------------------------------------------------------------------
+    // Activity bar
+    //----------------------------------------------------------------------------------------------
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,6 +83,11 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //----------------------------------------------------------------------------------------------
+    // Btn callbacks
+    //----------------------------------------------------------------------------------------------
+
+
     public void playAudio(View view) {
         if (mBound) {
             mService.playAudio(R.raw.song);
@@ -87,10 +100,19 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    public void startTutorialsActivity(View view) {
+        Intent intent = new Intent(this, TutorialsMenuActivity.class);
+        startActivity(intent);
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Audio service, TODO remove when done debugging
+    //----------------------------------------------------------------------------------------------
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            PlaySound.PlayAudioBinder binder = (PlaySound.PlayAudioBinder) service;
+            PlayAudioService.PlayAudioBinder binder = (PlayAudioService.PlayAudioBinder) service;
             mService = binder.getService();
             mBound = true;
         }

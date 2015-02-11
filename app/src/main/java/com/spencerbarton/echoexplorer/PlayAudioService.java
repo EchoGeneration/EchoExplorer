@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.os.Handler;
 import android.util.Log;
 
-public class PlaySound extends Service {
+public class PlayAudioService extends Service {
     private final static String TAG = "PlaySoundService";
     private final static int ECHO_DELAY = 500; // ms
     private final IBinder mBinder = new PlayAudioBinder();
@@ -86,7 +86,7 @@ public class PlaySound extends Service {
 
     public class PlayAudioBinder extends Binder {
 
-        PlaySound getService() { return PlaySound.this; }
+        PlayAudioService getService() { return PlayAudioService.this; }
 
     }
 

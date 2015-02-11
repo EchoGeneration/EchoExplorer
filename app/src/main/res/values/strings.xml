@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">EchoExplorer</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Echo Explorer</string>
+    <string name="main_menu_txt">Welcome to EchoExplorer</string>
+    <string name="btn_tutorials">Tutorials</string>
     <string name="action_settings">Settings</string>
     <string name="playsound">Play Sound</string>
     <string name="play_echos">Play Distance Echos</string>
+    <string name="title_activity_tutorials_menu">Tutorials</string>
+    <string name="tutorials_menu_header">Tutorials</string>
+    <string name="tutorials_menu_directions">Select any tutorial to begin. It is recommended that you take tutorials in order.</string>
 
 </resources>
