@@ -3,6 +3,7 @@ package com.spencerbarton.echoexplorer;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
@@ -31,6 +32,7 @@ public class TutorialsMenuActivity extends ActionBarActivity {
 
     private static final String TAG = "TutorialsMenuActivity";
     public static final String EXTRA_TUTORIAL_NAME = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_NAME";
+    public static final String EXTRA_TUTORIAL_ID = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_ID";
 
     //----------------------------------------------------------------------------------------------
     // Startup
@@ -59,8 +61,19 @@ public class TutorialsMenuActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-                Log.i(TAG, "pos: " + position + " id:" + id);
-                // TODO start new activity
+                // Get textview text
+                TextView textView = (TextView) view;
+                String text = textView.getText().toString();
+
+                Log.i(TAG, "Tut clicked pos: " + position + " id:" + id + " name: " + text);
+
+                // Start new tutorial activity
+                Intent intent = new Intent(TutorialsMenuActivity.this, TutorialActivity.class);
+
+
+                intent.putExtra(EXTRA_TUTORIAL_ID, id);
+                intent.putExtra(EXTRA_TUTORIAL_NAME, text);
+                startActivity(intent);
             }
 
         });

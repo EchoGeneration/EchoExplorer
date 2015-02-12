@@ -30,8 +30,8 @@ public class TutorialActivity extends ActionBarActivity {
         // TODO extract tutorial id and then look-up info in DB
         // TODO replace name with id
         mName = intent.getStringExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_NAME);
-        TextView tutTitle = (TextView) findViewById(R.id.tutorial_title);
-        tutTitle.setText(mName);
+        long id = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_ID, 0);
+        Log.i(TAG, "Id: " + id + ", Name: " + mName);
 
     }
 
@@ -40,8 +40,7 @@ public class TutorialActivity extends ActionBarActivity {
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_tutorial, menu);
-        Button title = (Button) menu.findItem(R.id.action_bar_title);
-        title.setText(mName);
+        setTitle(mName);
         return true;
     }
 

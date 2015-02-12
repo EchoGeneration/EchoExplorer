@@ -1,4 +1,6 @@
 <menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.spencerbarton.echoexplorer.TutorialActivity">
+    tools:context="com.spencerbarton.echoexplorer.TutorialActivity"
+    android:id="@+id/tutorial_menu">
 </menu>
