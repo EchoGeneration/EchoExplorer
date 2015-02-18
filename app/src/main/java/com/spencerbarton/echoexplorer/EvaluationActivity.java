@@ -6,12 +6,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RadioGroup;
 
-
+// TODO add btn listener
 public class EvaluationActivity extends ActionBarActivity {
 
     private final static String TAG = "EvaluationActivity";
     private String mName = "";
+    private String[] mChoices = {"True", "False"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,9 @@ public class EvaluationActivity extends ActionBarActivity {
         long id = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_ID, 0);
         Log.i(TAG, "Id: " + id + ", Name: " + mName);
 
+        // Install choice buttons
+        installChoiceBtns(mChoices);
+
     }
 
     @Override
@@ -36,4 +44,27 @@ public class EvaluationActivity extends ActionBarActivity {
         return true;
     }
 
+    private void installChoiceBtns(String[] choices) {
+        RadioGroup targetView = (RadioGroup) findViewById(R.id.eval_choice_btn_grp);
+
+        for (String choice : choices) {
+            Button btn = new Button(this);
+            btn.setText(choice);
+
+            // Set to fill parent
+            ViewGroup.LayoutParams params = btn.getLayoutParams();
+            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            btn.setLayoutParams(params);
+
+            // Install btn
+            targetView.addView(btn);
+        }
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Handlers
+    //----------------------------------------------------------------------------------------------
+
+    public void onEchoBtn(View view) {
+    }
 }
