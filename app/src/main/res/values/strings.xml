@@ -14,5 +14,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="tutorial_title_default">Tutorial Title</string>
     <string name="echo_btn_desc">echo button</string>
+    <string name="title_activity_evaluation">EvaluationActivity</string>
 
 </resources>

@@ -43,6 +43,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.spencerbarton.echoexplorer.TutorialsMenuActivity" />
         </activity>
+        <activity
+            android:name=".EvaluationActivity"
+            android:label="@string/title_activity_evaluation"
+            android:parentActivityName=".TutorialsMenuActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.spencerbarton.echoexplorer.TutorialsMenuActivity" />
+        </activity>
     </application>
 
 </manifest>
