@@ -1,6 +1,7 @@
 package com.spencerbarton.echoexplorer;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
@@ -22,18 +23,12 @@ public class Databases {
         private static final String dbName = TutorialDatabase.class.getName();
         private static final String dbPath = "/data/data" + packageName + "/databases/" + dbName;
 
-        // FIXME
         private final Context context;
-        private SQLiteDatabase tutorialDB;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Constructor
-        ////////////////////////////////////////////////////////////////////////////////////////////
+        private SQLiteDatabase tutorialDb;
 
         public TutorialDatabase(Context context) {
             this.context = context;
         }
-
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Private Methods
@@ -72,9 +67,9 @@ public class Databases {
             source.close();
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
         // Public Methods
-        ///////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
         public void openDatabase() throws IOException, SQLiteException {
 
@@ -84,24 +79,16 @@ public class Databases {
                 fetchDatabase(context, dbName, dbPath);
             }
 
-            this.tutorialDB = SQLiteDatabase.openDatabase(dbPath, cursorFactory,
+            this.tutorialDb = SQLiteDatabase.openDatabase(dbPath, cursorFactory,
                                                           SQLiteDatabase.OPEN_READONLY);
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Abstract Implemented Methods
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        // TODO: add specific queries
-
-        // Given tutorial id, get it's name
-        public String idToName(int id) {
-            return null;
+        public SQLiteDatabase getDatabase() {
+            return tutorialDb;
         }
 
-        // Given a group identifier, get all tutorial ids
-        public String [] getAllIds(String tutorialGroup) {
-            return null;
+        public void closeDatabase() {
+            tutorialDb.close();
         }
 
     }
