@@ -32,3 +32,6 @@ proguard/
 
 # Log Files
 *.log
+
+# Git configuration file
+.gitconfig
