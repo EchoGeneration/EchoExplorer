@@ -58,6 +58,8 @@ public class EvaluationActivity extends ActionBarActivity {
 
             // Install btn
             targetView.addView(btn);
+
+            // TODO handler
         }
     }
 

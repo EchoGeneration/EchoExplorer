@@ -1,19 +1,26 @@
 package com.spencerbarton.echoexplorer;
 
 import android.content.Intent;
+import android.gesture.Gesture;
+import android.gesture.GestureLibraries;
+import android.gesture.GestureLibrary;
+import android.gesture.GestureOverlayView;
+import android.gesture.GestureOverlayView.OnGesturePerformedListener;
+import android.gesture.Prediction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
-public class TutorialActivity extends ActionBarActivity {
+import java.util.ArrayList;
+
+public class TutorialActivity extends ActionBarActivity implements OnGesturePerformedListener {
 
     private final static String TAG = "TutorialActivity";
     private String mName = "";
+    private GestureLibrary gestureLib;
 
     //----------------------------------------------------------------------------------------------
     // Startup
@@ -31,6 +38,14 @@ public class TutorialActivity extends ActionBarActivity {
         mName = intent.getStringExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_NAME);
         long id = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_ID, 0);
         Log.i(TAG, "Id: " + id + ", Name: " + mName);
+
+        // Add gesture recognition
+        GestureOverlayView gestureOverlayView = (GestureOverlayView) findViewById(R.id.tut_gestureOverlayView);
+        gestureOverlayView.addOnGesturePerformedListener(this);
+        gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
+        if (!gestureLib.load()) {
+            finish();
+        }
 
     }
 
@@ -50,4 +65,20 @@ public class TutorialActivity extends ActionBarActivity {
     public void onEchoBtn(View view) {
         Log.i(TAG, "Echo btn clicked");
     }
+
+    //----------------------------------------------------------------------------------------------
+    // Gestures
+    //----------------------------------------------------------------------------------------------
+
+    @Override
+    public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+        ArrayList<Prediction> predictions = gestureLib.recognize(gesture);
+        for (Prediction prediction : predictions) {
+            if (prediction.score > 1.0) {
+                Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
 }
