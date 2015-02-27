@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 
-public class TutorialTables {
+public class TutorialStepDb {
 
     static class TutorialStepTable {
 
@@ -21,8 +21,20 @@ public class TutorialTables {
 
         private final SQLiteDatabase tutorialDb;
 
+        // Constructor
         public TutorialStepTable(SQLiteDatabase tutorialDb) {
             this.tutorialDb = tutorialDb;
+        }
+
+        // Given a cursor, retrieves all the columns and packs them into a Tutorial Step structure
+        private static TutorialStep packTutorialStep(Cursor cursor) {
+            int tutorialId = Integer.parseInt(Databases.getColumnByName(cursor, tutorialIdCol));
+            String audioDir = Databases.getColumnByName(cursor, audioDirCol);
+            String echoFile = Databases.getColumnByName(cursor, echoCol);
+            String textDir = Databases.getColumnByName(cursor, echoCol);
+            int nextStep = Integer.parseInt(Databases.getColumnByName(cursor, nextStepCol));
+
+            return new TutorialStep(tutorialId, audioDir, echoFile, textDir, nextStep);
         }
 
         public String getAudioFile(int tutorialId) {
@@ -32,12 +44,11 @@ public class TutorialTables {
             String[] args = {audioDirCol, tableName, tutorialIdCol, Integer.toString(tutorialId)};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
 
-            // The tutorial does not exist
-            if (cursor == null) {
+            // The cursor is empty, the tutorial does not exist
+            if (!cursor.moveToFirst()) {
                 return null;
             }
 
-            cursor.moveToFirst();
             return cursor.getString(cursor.getColumnIndex(audioDirCol));
         }
 
@@ -47,17 +58,37 @@ public class TutorialTables {
             String[] args = {tableName, tutorialIdCol, Integer.toString(tutorialId)};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
 
-            // THe tutorial does not exist
-            if (cursor == null) {
+            // The cursor is empty, the tutorial does not exist
+            if (!cursor.moveToFirst()) {
                 return null;
             }
 
-            cursor.moveToFirst();
-            int nextStep = Integer.parseInt(cursor.getString(cursor.getColumnIndex(nextStepCol)));
-            return new TutorialStep(tutorialId, cursor.getString(cursor.getColumnIndex(audioDirCol)),
-                cursor.getString(cursor.getColumnIndex(echoCol)),
-                cursor.getString(cursor.getColumnIndex(textDirCol)),
-                nextStep);
+            return packTutorialStep(cursor);
+        }
+
+        // Gets a list of all the tutorial names, sorted
+        public TutorialStep[] getTutorials() {
+            String query = "select * from ? ORDER BY ? ASC";
+
+            String[] args = {tableName, tutorialIdCol};
+            Cursor cursor = this.tutorialDb.rawQuery(query, args);
+
+            // The cursor is empty, the table is empty
+            if (!cursor.moveToFirst()) {
+                return null;
+            }
+
+            int i = 0;
+            TutorialStep[] entries = new TutorialStep[cursor.getCount()];
+
+            // Iterate over the entries, and collect them into an array
+            while (!cursor.isAfterLast()) {
+                entries[i] = packTutorialStep(cursor);
+                cursor.moveToNext();
+                i += 1;
+            }
+
+            return entries;
         }
     }
 
@@ -81,5 +112,4 @@ public class TutorialTables {
 
         // TODO: Define Getters and Setters?
     }
-
 }

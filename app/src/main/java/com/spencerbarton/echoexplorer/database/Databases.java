@@ -13,6 +13,12 @@ import java.io.OutputStream;
 
 public class Databases {
 
+        // Provides a convenient wrapper to access a column
+    public static String getColumnByName(Cursor dbCursor, String colName) {
+        return dbCursor.getString(dbCursor.getColumnIndex(colName));
+    }
+
+
     static class TutorialDatabase  {
 
         // Parameters representing the state of the database
@@ -21,7 +27,7 @@ public class Databases {
         // The path to the database file
         private static final String packageName = TutorialDatabase.class.getPackage().getName();
         private static final String dbName = TutorialDatabase.class.getName();
-        private static final String dbPath = "/data/data" + packageName + "/databases/" + dbName;
+        private static final String dbPath = "/data/data/" + packageName + "/databases/" + dbName;
 
         private final Context context;
         private SQLiteDatabase tutorialDb;
