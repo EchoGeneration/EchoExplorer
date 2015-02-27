@@ -13,7 +13,7 @@ import java.io.OutputStream;
 
 public class Databases {
 
-        // Provides a convenient wrapper to access a column
+    // Provides a convenient wrapper to access a column
     public static String getColumnByName(Cursor dbCursor, String colName) {
         return dbCursor.getString(dbCursor.getColumnIndex(colName));
     }
@@ -32,13 +32,24 @@ public class Databases {
         private final Context context;
         private SQLiteDatabase tutorialDb;
 
-        public TutorialDatabase(Context context) {
+        public TutorialDatabase(Context context) throws SQLiteException, IOException {
             this.context = context;
+            this.tutorialDb = openDatabase(context);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Private Methods
         ////////////////////////////////////////////////////////////////////////////////////////////
+
+        private static SQLiteDatabase openDatabase(Context context) throws IOException, SQLiteException {
+            /* If the database is not present, then copy it from the assets/ folder.
+             * This is a one-time operation. */
+            if (!dbExists(dbPath)) {
+                fetchDatabase(context, dbName, dbPath);
+            }
+
+            return SQLiteDatabase.openDatabase(dbPath, cursorFactory, SQLiteDatabase.OPEN_READONLY);
+        }
 
         private static boolean dbExists(String path) {
             File dbFile;
@@ -77,17 +88,6 @@ public class Databases {
         // Public Methods
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        public void openDatabase() throws IOException, SQLiteException {
-
-            /* If the database is not present, then copy it from the assets/ folder.
-             * This is a one-time operation. */
-            if (!dbExists(dbPath)) {
-                fetchDatabase(context, dbName, dbPath);
-            }
-
-            this.tutorialDb = SQLiteDatabase.openDatabase(dbPath, cursorFactory,
-                                                          SQLiteDatabase.OPEN_READONLY);
-        }
 
         public SQLiteDatabase getDatabase() {
             return tutorialDb;
