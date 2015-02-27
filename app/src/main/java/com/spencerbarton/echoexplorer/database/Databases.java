@@ -1,4 +1,4 @@
-package com.spencerbarton.echoexplorer;
+package com.spencerbarton.echoexplorer.database;
 
 import android.content.Context;
 import android.database.Cursor;

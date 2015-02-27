@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class TutorialActivity extends ActionBarActivity implements OnGesturePerformedListener {
+public class TutorialActivity extends ActionBarActivity {
 
     private final static String TAG = "TutorialActivity";
     private String mName = "";

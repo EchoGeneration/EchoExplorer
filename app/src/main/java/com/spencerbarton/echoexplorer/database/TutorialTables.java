@@ -1,4 +1,4 @@
-package com.spencerbarton.echoexplorer;
+package com.spencerbarton.echoexplorer.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
