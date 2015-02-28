@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteException;
 
 import java.io.IOException;
 
-
 public class TutorialStepDb {
 
     static class TutorialStepTable implements Databases.Packer<TutorialStep> {
@@ -34,11 +33,13 @@ public class TutorialStepDb {
 
         // Given a cursor, retrieves all the columns and packs them into a Tutorial Step structure
         public TutorialStep pack(Cursor cursor) {
-            int tutorialId = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor, tutorialIdCol));
+            int tutorialId = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor,
+                tutorialIdCol));
             String audioDir = Databases.CursorHelper.getColumnByName(cursor, audioDirCol);
             String echoFile = Databases.CursorHelper.getColumnByName(cursor, echoCol);
-            String textDir = Databases.CursorHelper.getColumnByName(cursor, echoCol);
-            int nextStep = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor, nextStepCol));
+            String textDir = Databases.CursorHelper.getColumnByName(cursor, textDirCol);
+            int nextStep = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor,
+                nextStepCol));
 
             return new TutorialStep(tutorialId, audioDir, echoFile, textDir, nextStep);
         }
@@ -84,9 +85,6 @@ public class TutorialStepDb {
                 return null;
             }
 
-            int i = 0;
-            TutorialStep[] entries = new TutorialStep[cursor.getCount()];
-
             return Databases.CursorHelper.getAllEntries(cursor, this);
         }
     }
@@ -94,16 +92,18 @@ public class TutorialStepDb {
     static class TutorialStep {
 
         int tutorialId;
-        String audioDirectionsFile;
+        String directionsAudioFile;
         String echoAudioFile;
         String textDirections;
         int nextStep;
 
-        public TutorialStep(int tutorialId, String audioDirectionsFile, String echoAudioFile,
+
+
+        public TutorialStep(int tutorialId, String directionsAudioFile, String echoAudioFile,
             String textDirections, int nextStep)
         {
             this.tutorialId = tutorialId;
-            this.audioDirectionsFile = audioDirectionsFile;
+            this.directionsAudioFile = directionsAudioFile;
             this.echoAudioFile = echoAudioFile;
             this.textDirections = textDirections;
             this.nextStep = nextStep;
