@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 
 // TODO add btn listener
-public class EvaluationActivity extends ActionBarActivity {
+public class EvaluationActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler{
 
     private final static String TAG = "EvaluationActivity";
     private String mName = "";
@@ -68,5 +68,36 @@ public class EvaluationActivity extends ActionBarActivity {
     //----------------------------------------------------------------------------------------------
 
     public void onEchoBtn(View view) {
+    }
+
+    @Override
+    public void onSwipeRight() {
+
+        // Previous step or tutorial
+        // TODO
+        Log.i(TAG, "RIGHT");
+    }
+
+    @Override
+    public void onSwipeLeft() {
+
+        // Next step or tutorial
+        // TODO
+        Log.i(TAG, "LEFT");
+    }
+
+    @Override
+    public void onSwipeUp() {
+
+        // Do nothing
+        Log.i(TAG, "UP");
+    }
+
+    @Override
+    public void onSwipeDown() {
+
+        // Return to menu
+        Intent intent = new Intent(this, TutorialsMenuActivity.class);
+        startActivity(intent);
     }
 }

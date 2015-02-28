@@ -70,21 +70,30 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
     @Override
     public void onSwipeRight() {
+
+        // Previous step or tutorial
         Log.i(TAG, "RIGHT");
     }
 
     @Override
     public void onSwipeLeft() {
+
+        // Next step or tutorial
         Log.i(TAG, "LEFT");
     }
 
     @Override
     public void onSwipeUp() {
+
+        // Do nothing
         Log.i(TAG, "UP");
     }
 
     @Override
     public void onSwipeDown() {
-        Log.i(TAG, "DOWN");
+
+        // Return to menu
+        Intent intent = new Intent(this, TutorialsMenuActivity.class);
+        startActivity(intent);
     }
 }

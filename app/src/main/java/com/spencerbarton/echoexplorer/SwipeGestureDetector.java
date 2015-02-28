@@ -6,6 +6,10 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 /**
+ * Swipe gesture detection
+ *
+ * TODO detect gestures over whole screen including over top of buttons
+ *
  * Created by Spencer on 2/27/2015.
  */
 public class SwipeGestureDetector {

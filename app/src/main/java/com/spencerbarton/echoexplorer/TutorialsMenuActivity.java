@@ -70,7 +70,7 @@ public class TutorialsMenuActivity extends ActionBarActivity {
                 // Start new tutorial activity
                 Intent intent = new Intent(TutorialsMenuActivity.this, TutorialActivity.class);
 
-
+                // Data for activity, particularly id
                 intent.putExtra(EXTRA_TUTORIAL_ID, id);
                 intent.putExtra(EXTRA_TUTORIAL_NAME, text);
                 startActivity(intent);
