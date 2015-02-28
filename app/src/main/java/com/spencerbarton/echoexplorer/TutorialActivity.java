@@ -11,11 +11,9 @@ import android.view.View;
 public class TutorialActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler {
 
     private final static String TAG = "TutorialActivity";
-    private String mName = "";
     private SwipeGestureDetector mSwipeGestureDetector;
-    private long mThisActivityId;
-    private long mNextActivityId;
-    private long mPrevActivityId;
+    private LessonManager mLessonManager;
+    private String mName = "";
 
     //----------------------------------------------------------------------------------------------
     // Startup
@@ -29,11 +27,14 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
         // Extract info on which tutorial was instantiated
         Intent intent = getIntent();
         // TODO extract tutorial id and then look-up info in DB
-        mName = intent.getStringExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_NAME);
-        mThisActivityId = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_ID, -1);
+        mName = intent.getStringExtra(LessonManager.EXTRA_LESSON_NAME);
+        int id = intent.getIntExtra(LessonManager.EXTRA_LESSON_ID, -1);
 
         // Add gesture recognition
         mSwipeGestureDetector = new SwipeGestureDetector(this, this);
+
+        // Add lesson movement management
+        mLessonManager = new LessonManager(this, id);
 
     }
 
@@ -62,22 +63,12 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
     @Override
     public void onSwipeRight() {
-
-        // Previous step or tutorial
-        if (mPrevActivityId < 0) {
-            returnToMenu();
-        } else {
-            startNewActivity(mNextActivityId, );
-        }
+        mLessonManager.goNext();
     }
 
     @Override
     public void onSwipeLeft() {
-
-        // Next step or tutorial
-        if (mNextActivityId < 0) {
-            returnToMenu();
-        }
+        mLessonManager.goPrev();
     }
 
     @Override
@@ -89,7 +80,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
     @Override
     public void onSwipeDown() {
-        returnToMenu();
+        mLessonManager.goHome();
     }
 
 }
