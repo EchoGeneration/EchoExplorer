@@ -11,16 +11,17 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class TutorialActivity extends ActionBarActivity {
+public class TutorialActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler {
 
     private final static String TAG = "TutorialActivity";
     private String mName = "";
-    private GestureLibrary gestureLib;
+    private SwipeGestureDetector mSwipeGestureDetector;
 
     //----------------------------------------------------------------------------------------------
     // Startup
@@ -40,12 +41,7 @@ public class TutorialActivity extends ActionBarActivity {
         Log.i(TAG, "Id: " + id + ", Name: " + mName);
 
         // Add gesture recognition
-        GestureOverlayView gestureOverlayView = (GestureOverlayView) findViewById(R.id.tut_gestureOverlayView);
-        gestureOverlayView.addOnGesturePerformedListener(this);
-        gestureLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
-        if (!gestureLib.load()) {
-            finish();
-        }
+        mSwipeGestureDetector = new SwipeGestureDetector(this, this);
 
     }
 
@@ -58,27 +54,37 @@ public class TutorialActivity extends ActionBarActivity {
         return true;
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mSwipeGestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
     //----------------------------------------------------------------------------------------------
-    // Buttons
+    // Handlers
     //----------------------------------------------------------------------------------------------
 
     public void onEchoBtn(View view) {
         Log.i(TAG, "Echo btn clicked");
     }
 
-    //----------------------------------------------------------------------------------------------
-    // Gestures
-    //----------------------------------------------------------------------------------------------
-
     @Override
-    public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-        ArrayList<Prediction> predictions = gestureLib.recognize(gesture);
-        for (Prediction prediction : predictions) {
-            if (prediction.score > 1.0) {
-                Toast.makeText(this, prediction.name, Toast.LENGTH_SHORT)
-                        .show();
-            }
-        }
+    public void onSwipeRight() {
+        Log.i(TAG, "RIGHT");
     }
 
+    @Override
+    public void onSwipeLeft() {
+        Log.i(TAG, "LEFT");
+    }
+
+    @Override
+    public void onSwipeUp() {
+        Log.i(TAG, "UP");
+    }
+
+    @Override
+    public void onSwipeDown() {
+        Log.i(TAG, "DOWN");
+    }
 }

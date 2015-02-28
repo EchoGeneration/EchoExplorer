@@ -35,3 +35,5 @@ proguard/
 
 # Git configuration file
 .gitconfig
+
+*.iml
