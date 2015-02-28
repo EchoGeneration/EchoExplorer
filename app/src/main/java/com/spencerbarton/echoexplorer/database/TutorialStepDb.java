@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class TutorialStepDb {
 
-    static class TutorialStepTable implements Databases.Packer<TutorialStep> {
+    public static class TutorialStepTable implements Databases.Packer<TutorialStep> {
 
         private static final String tag = TutorialStepTable.class.getName();
 
@@ -94,7 +94,7 @@ public class TutorialStepDb {
         }
     }
 
-    static class TutorialStep {
+    public static class TutorialStep {
 
         int tutorialId;
         String directionsAudioFile;

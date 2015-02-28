@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class EvaluationStepDb {
 
-    static class EvaluationStepTable implements Databases.Packer<EvaluationStep> {
+    public static class EvaluationStepTable implements Databases.Packer<EvaluationStep> {
 
         // Tag for debugging
         private static final String tag = EvaluationStepTable.class.getName();
@@ -88,7 +88,7 @@ public class EvaluationStepDb {
         }
     }
 
-    static class EvaluationStep {
+    public static class EvaluationStep {
 
         int evaluationId;
         String directionsAudioFile;

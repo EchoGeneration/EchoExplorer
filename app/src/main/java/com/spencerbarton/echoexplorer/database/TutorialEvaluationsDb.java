@@ -13,9 +13,9 @@ import java.io.IOException;
  */
 public class TutorialEvaluationsDb {
 
-    static class EvaluationStepTable implements Databases.Packer<TutorialEvaluations> {
+    public static class TutorialEvaluationsTable implements Databases.Packer<TutorialEvaluations> {
 
-        private static final String tag = EvaluationStepTable.class.getName();
+        private static final String tag = TutorialEvaluationsTable.class.getName();
 
         // The name of the database and table
         private static final String dbName = "TutorialDatabase";
@@ -31,7 +31,7 @@ public class TutorialEvaluationsDb {
         private final SQLiteDatabase tutorialDb;
 
         // Constructor
-        public EvaluationStepTable(Context context) throws SQLiteException, IOException {
+        public TutorialEvaluationsTable(Context context) throws SQLiteException, IOException {
             this.tutorialDb = Databases.StaticDatabase.openDatabase(context, dbName);
         }
 
@@ -62,7 +62,7 @@ public class TutorialEvaluationsDb {
         }
     }
 
-    static class TutorialEvaluations {
+    public static class TutorialEvaluations {
 
         String name;
         String type;
