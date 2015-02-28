@@ -4,13 +4,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import java.io.IOException;
-
 
 public class TutorialStepDb {
 
     static class TutorialStepTable implements Databases.Packer<TutorialStep> {
+
+        private static final String tag = TutorialStepTable.class.getName();
 
         // The name of the database and table
         private static final String dbName = "TutorialDatabase";
@@ -34,11 +36,13 @@ public class TutorialStepDb {
 
         // Given a cursor, retrieves all the columns and packs them into a Tutorial Step structure
         public TutorialStep pack(Cursor cursor) {
-            int tutorialId = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor, tutorialIdCol));
+            int tutorialId = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor,
+                tutorialIdCol));
             String audioDir = Databases.CursorHelper.getColumnByName(cursor, audioDirCol);
             String echoFile = Databases.CursorHelper.getColumnByName(cursor, echoCol);
-            String textDir = Databases.CursorHelper.getColumnByName(cursor, echoCol);
-            int nextStep = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor, nextStepCol));
+            String textDir = Databases.CursorHelper.getColumnByName(cursor, textDirCol);
+            int nextStep = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor,
+                nextStepCol));
 
             return new TutorialStep(tutorialId, audioDir, echoFile, textDir, nextStep);
         }
@@ -55,7 +59,7 @@ public class TutorialStepDb {
                 return null;
             }
 
-            return cursor.getString(cursor.getColumnIndex(audioDirCol));
+            return Databases.CursorHelper.getColumnByName(cursor, audioDirCol);
         }
 
         public TutorialStep getTutorialData(int tutorialId) {
@@ -78,14 +82,13 @@ public class TutorialStepDb {
 
             String[] args = {tableName, tutorialIdCol};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
+            Log.e(tag+".getTutorials", "Querying for all tutorials");
 
             // The cursor is empty, the table is empty
             if (!cursor.moveToFirst()) {
+                Log.e(tag+".getTutorials", "Query result is empty!");
                 return null;
             }
-
-            int i = 0;
-            TutorialStep[] entries = new TutorialStep[cursor.getCount()];
 
             return Databases.CursorHelper.getAllEntries(cursor, this);
         }
@@ -94,16 +97,16 @@ public class TutorialStepDb {
     static class TutorialStep {
 
         int tutorialId;
-        String audioDirectionsFile;
+        String directionsAudioFile;
         String echoAudioFile;
         String textDirections;
         int nextStep;
 
-        public TutorialStep(int tutorialId, String audioDirectionsFile, String echoAudioFile,
+        public TutorialStep(int tutorialId, String directionsAudioFile, String echoAudioFile,
             String textDirections, int nextStep)
         {
             this.tutorialId = tutorialId;
-            this.audioDirectionsFile = audioDirectionsFile;
+            this.directionsAudioFile = directionsAudioFile;
             this.echoAudioFile = echoAudioFile;
             this.textDirections = textDirections;
             this.nextStep = nextStep;
