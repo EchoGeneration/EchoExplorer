@@ -4,12 +4,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import java.io.IOException;
 
 public class TutorialStepDb {
 
     static class TutorialStepTable implements Databases.Packer<TutorialStep> {
+
+        private static final String tag = TutorialStepTable.class.getName();
 
         // The name of the database and table
         private static final String dbName = "TutorialDatabase";
@@ -56,7 +59,7 @@ public class TutorialStepDb {
                 return null;
             }
 
-            return cursor.getString(cursor.getColumnIndex(audioDirCol));
+            return Databases.CursorHelper.getColumnByName(cursor, audioDirCol);
         }
 
         public TutorialStep getTutorialData(int tutorialId) {
@@ -79,9 +82,11 @@ public class TutorialStepDb {
 
             String[] args = {tableName, tutorialIdCol};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
+            Log.e(tag+".getTutorials", "Querying for all tutorials");
 
             // The cursor is empty, the table is empty
             if (!cursor.moveToFirst()) {
+                Log.e(tag+".getTutorials", "Query result is empty!");
                 return null;
             }
 
@@ -96,8 +101,6 @@ public class TutorialStepDb {
         String echoAudioFile;
         String textDirections;
         int nextStep;
-
-
 
         public TutorialStep(int tutorialId, String directionsAudioFile, String echoAudioFile,
             String textDirections, int nextStep)

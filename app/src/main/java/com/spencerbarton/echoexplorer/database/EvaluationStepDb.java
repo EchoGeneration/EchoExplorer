@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -13,6 +14,9 @@ import java.io.IOException;
 public class EvaluationStepDb {
 
     static class EvaluationStepTable implements Databases.Packer<EvaluationStep> {
+
+        // Tag for debugging
+        private static final String tag = EvaluationStepTable.class.getName();
 
         // The name of the database and table
         private static final String dbName = "TutorialDatabase";
@@ -48,7 +52,7 @@ public class EvaluationStepDb {
             int order = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor, orderCol));
             String responseOptions = Databases.CursorHelper.getColumnByName(cursor, responseOptCol);
             int correctResponse = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor,
-                correctResponseCol));
+                    correctResponseCol));
 
             return new EvaluationStep(evaluationId, audioDirFile, echoFile, textDir, order,
                 responseOptions, correctResponse);
@@ -68,13 +72,15 @@ public class EvaluationStepDb {
             return this.pack(cursor);
         }
 
-        public EvaluationStep[] getAllEvaluations() {
+        public EvaluationStep[] getEvaluations() {
             String query = "select * from ? ORDER BY ? ASC";
 
             String[] args = {tableName, evalIdCol};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
+            Log.e(tag + ".getEvaluations", "Querying for all evaluations");
 
             if (!cursor.moveToFirst()) {
+                Log.e(tag + ".getEvaluations", "Querying result is empty!");
                 return null;
             }
 

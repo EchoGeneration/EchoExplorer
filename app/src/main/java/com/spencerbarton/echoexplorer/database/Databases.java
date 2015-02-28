@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,6 +51,9 @@ public final class Databases {
     }
 
     static final class StaticDatabase  {
+
+        // Tag for debugging
+        private static final String tag = StaticDatabase.class.getName();
 
         // Parameters representing the state of the database
         private static final SQLiteDatabase.CursorFactory cursorFactory = null;
@@ -106,14 +110,17 @@ public final class Databases {
         public static SQLiteDatabase openDatabase(Context context, String dbName)
                 throws IOException, SQLiteException
         {
+            Log.e(tag, "Opening up database: " + dbName);
             String path = dbDir + dbName;
 
             /* If the database is not present, then copy it from the assets/ folder.
              * This is a one-time operation. */
             if (!dbExists(path)) {
+                Log.e(tag, "Copying database from the assets/ folder");
                 fetchDatabase(context, dbName, path);
             }
 
+            Log.e(tag, "Opening the database as read only");
             return SQLiteDatabase.openDatabase(path, cursorFactory, SQLiteDatabase.OPEN_READONLY);
         }
 

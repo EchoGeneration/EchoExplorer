@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -13,6 +14,8 @@ import java.io.IOException;
 public class TutorialEvaluationsDb {
 
     static class EvaluationStepTable implements Databases.Packer<TutorialEvaluations> {
+
+        private static final String tag = EvaluationStepTable.class.getName();
 
         // The name of the database and table
         private static final String dbName = "TutorialDatabase";
@@ -38,8 +41,7 @@ public class TutorialEvaluationsDb {
             String name = Databases.CursorHelper.getColumnByName(cursor, nameCol);
             String type = Databases.CursorHelper.getColumnByName(cursor, typeCol);
             int ordering = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor,
-                orderingCol));
-
+                    orderingCol));
 
             return new TutorialEvaluations(name, type, ordering);
         }
@@ -49,8 +51,10 @@ public class TutorialEvaluationsDb {
 
             String[] args = {tableName, orderingCol};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
+            Log.e(tag + ".getAllEntries", "Querying for all tutorialEvaluation entries");
 
             if (!cursor.moveToFirst()) {
+                Log.e(tag + ".getAllEntries", "Query result is empty!");
                 return null;
             }
 
