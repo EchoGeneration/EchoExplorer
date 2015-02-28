@@ -96,11 +96,11 @@ public class TutorialStepDb {
 
     public static class TutorialStep {
 
-        int tutorialId;
-        String directionsAudioFile;
-        String echoAudioFile;
-        String textDirections;
-        int nextStep;
+        public int tutorialId;
+        public String directionsAudioFile;
+        public String echoAudioFile;
+        public String textDirections;
+        public int nextStep;
 
         public TutorialStep(int tutorialId, String directionsAudioFile, String echoAudioFile,
             String textDirections, int nextStep)

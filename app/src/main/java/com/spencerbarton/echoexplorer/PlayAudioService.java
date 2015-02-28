@@ -25,14 +25,18 @@ public class PlayAudioService extends Service {
     }
 
     public void playAudio(int audioFile) {
+        playAudio(audioFile, new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                stopAudio();
+            }
+        });
+    }
+
+    public void playAudio(int audioFile, MediaPlayer.OnCompletionListener listener){
         try {
             mMediaPlayer = MediaPlayer.create(this, audioFile);
-            mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    stopAudio();
-                }
-            });
+            mMediaPlayer.setOnCompletionListener(listener);
             mMediaPlayer.start();
         } catch (IllegalStateException e) {
             Log.e(TAG, e.getMessage());
@@ -73,8 +77,6 @@ public class PlayAudioService extends Service {
             Log.e(TAG, e.getMessage());
         }
     }
-
-
 
     public void stopAudio() {
         if (mMediaPlayer != null) {
