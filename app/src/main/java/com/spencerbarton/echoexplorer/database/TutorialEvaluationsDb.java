@@ -16,19 +16,19 @@ public class TutorialEvaluationsDb {
     public static final String TYPE_TUTORIAL = "com.spencerbarton.echoexplorer.TYPE_TUTORIAL";
     public static final String TYPE_EVALUATION = "com.spencerbarton.echoexplorer.TYPE_EVALUATION";
 
-    public static class TutorialEvaluationsTable implements Databases.Packer<TutorialEvaluations> {
+    public static class TutorialEvaluationsTable implements Databases.Packer<Lesson> {
 
         private static final String tag = TutorialEvaluationsTable.class.getName();
 
         // The name of the database and table
-        private static final String dbName = "TutorialDatabase";
-        private static final String tableName = TutorialEvaluations.class.getName();
+        private static final String dbName = "LessonDatabase";
+        private static final String tableName = Lesson.class.getName();
 
         // The columns of the table
         private static final String _idCol = "_id";
+        private static final String lessonNumberCol = "ordering";
         private static final String nameCol = "name";
         private static final String typeCol = "type";
-        private static final String orderingCol = "ordering";
 
         // The database containing the tutorial step table
         private final SQLiteDatabase tutorialDb;
@@ -39,23 +39,23 @@ public class TutorialEvaluationsDb {
         }
 
         // Given a cursor, retrieves all the columns and packs them into a Tutorial Evaluations structure
-        public TutorialEvaluations pack(Cursor cursor) {
+        public Lesson pack(Cursor cursor) {
 
+            int lessonNumber = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor,
+                    lessonNumberCol));
             String name = Databases.CursorHelper.getColumnByName(cursor, nameCol);
             String type = Databases.CursorHelper.getColumnByName(cursor, typeCol);
-            int ordering = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor,
-                    orderingCol));
 
-            return new TutorialEvaluations(name, type, ordering);
+            return new Lesson(lessonNumber, name, type);
         }
 
         // Get all ordered by 'order'
-        public TutorialEvaluations[] getAllEntries() {
+        public Lesson[] getAllRows() {
             String query = "select * from ? ORDER BY ? ASC";
 
-            String[] args = {tableName, orderingCol};
+            String[] args = {tableName, lessonNumberCol};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
-            Log.e(tag + ".getAllEntries", "Querying for all tutorialEvaluation entries");
+            Log.e(tag + ".getAllEntries", "Querying for all Lesson entries");
 
             if (!cursor.moveToFirst()) {
                 Log.e(tag + ".getAllEntries", "Query result is empty!");
@@ -66,17 +66,17 @@ public class TutorialEvaluationsDb {
         }
     }
 
-    public static class TutorialEvaluations {
+    public static class Lesson {
 
+        public int lessonNumber;
         public String name;
         public String type;
-        public int ordering;
 
-        public TutorialEvaluations(String name, String type, int ordering)
+        public Lesson(int lessonNumber, String name, String type)
         {
+            this.lessonNumber = lessonNumber;
             this.name = name;
             this.type = type;
-            this.ordering = ordering;
         }
     }
 }

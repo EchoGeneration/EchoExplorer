@@ -18,7 +18,7 @@ public final class Databases {
     // This is to insure that Databases is a static class
     private Databases() {}
 
-    // Defines an interface for constructing an object T using a row from a cursor
+    // Defines an interface for a class that accesses a database containing types T
     public interface Packer<T> {
         T pack(Cursor cursor);
     }
@@ -35,13 +35,13 @@ public final class Databases {
             return dbCursor.getString(dbCursor.getColumnIndex(colName));
         }
 
-        public static <T> T[] getAllEntries(Cursor cursor, Packer<T> packer) {
+        public static <T> T[] getAllEntries(Cursor cursor, Packer<T> dbhelp) {
             int i = 0;
-            T[] entries = (T[]) Array.newInstance(packer.getClass(), cursor.getCount());
+            T[] entries = (T[]) Array.newInstance(dbhelp.getClass(), cursor.getCount());
 
             // Iterate over the entries, and collect them into an array
             while (!cursor.isAfterLast()) {
-                entries[i] = packer.pack(cursor);
+                entries[i] = dbhelp.pack(cursor);
                 cursor.moveToNext();
                 i += 1;
             }

@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.spencerbarton.echoexplorer.database.TutorialEvaluationsDb;
 import com.spencerbarton.echoexplorer.database.TutorialEvaluationsDb.TutorialEvaluationsTable;
-import com.spencerbarton.echoexplorer.database.TutorialEvaluationsDb.TutorialEvaluations;
 
 import java.io.IOException;
 
@@ -26,7 +25,7 @@ public class LessonManager implements LessonManagerStarter{
     private TutorialEvaluationsTable mTutorialEvaluationsTable;
     private Context mContext;
     private long mId;
-    private TutorialEvaluations[] mLessons;
+    private TutorialEvaluationsDb.Lesson[] mLessons;
 
     public LessonManager(Context context) {
         this(context, -1);
@@ -39,7 +38,7 @@ public class LessonManager implements LessonManagerStarter{
         // Load table data
         try {
             mTutorialEvaluationsTable = new TutorialEvaluationsTable(context);
-            mLessons = mTutorialEvaluationsTable.getAllEntries();
+            mLessons = mTutorialEvaluationsTable.getAllRows();
         } catch (IOException e) {
 
             // Error so go home
@@ -86,7 +85,7 @@ public class LessonManager implements LessonManagerStarter{
         return -1;
     }
 
-    private TutorialEvaluations findNextLesson() {
+    private TutorialEvaluationsDb.Lesson findNextLesson() {
         int i = findLessonIndex();
         if ((0 <= i) && (i < (mLessons.length-1))) {
             return mLessons[i+1];
@@ -94,7 +93,7 @@ public class LessonManager implements LessonManagerStarter{
         return null;
     }
 
-    private TutorialEvaluations findPrevLesson() {
+    private TutorialEvaluationsDb.Lesson findPrevLesson() {
         int i = findLessonIndex();
         if (0 < i) {
             return mLessons[i-1];
@@ -102,7 +101,7 @@ public class LessonManager implements LessonManagerStarter{
         return null;
     }
 
-    private void goToLesson(TutorialEvaluations lesson) {
+    private void goToLesson(TutorialEvaluationsDb.Lesson lesson) {
         if (lesson != null) {
 
             // Pick which activity type to instantiate
