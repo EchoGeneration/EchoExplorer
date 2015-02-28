@@ -83,13 +83,9 @@ public class TutorialsMenuActivity extends ActionBarActivity {
 
                 Log.i(TAG, "Tut clicked pos: " + position + " id:" + id + " name: " + text);
 
-                // Start new tutorial activity
-                Intent intent = new Intent(TutorialsMenuActivity.this, TutorialActivity.class);
-
-                // Data for activity, particularly id
-                intent.putExtra(EXTRA_TUTORIAL_ID, id);
-                intent.putExtra(EXTRA_TUTORIAL_NAME, text);
-                startActivity(intent);
+                // Create manager to handle loading lesson
+                LessonManagerStarter starter = new LessonManager(TutorialsMenuActivity.this);
+                starter.goToId(id);
             }
 
         });

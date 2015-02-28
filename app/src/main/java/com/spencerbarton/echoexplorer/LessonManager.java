@@ -18,21 +18,21 @@ import java.io.IOException;
  *
  * Created by Spencer on 2/28/2015.
  */
-public class ActivityManager {
+public class LessonManager implements LessonManagerStarter{
 
     public static final String EXTRA_LESSON_ID = "com.spencerbarton.echoexplorer.EXTRA_LESSON_ID";
-    private static final String EXTRA_LESSON_NAME = "com.spencerbarton.echoexplorer.EXTRA_LESSON_NAME";
+    public static final String EXTRA_LESSON_NAME = "com.spencerbarton.echoexplorer.EXTRA_LESSON_NAME";
     private static final String TAG = "ActivityManager";
     private TutorialEvaluationsTable mTutorialEvaluationsTable;
     private Context mContext;
-    private int mId;
+    private long mId;
     private TutorialEvaluations[] mLessons;
 
-    public ActivityManager(Context context) {
+    public LessonManager(Context context) {
         this(context, -1);
     }
 
-    public ActivityManager(Context context, int activityId) {
+    public LessonManager(Context context, long activityId) {
         mContext = context;
         mId = activityId;
 
@@ -123,4 +123,12 @@ public class ActivityManager {
         }
     }
 
+}
+
+//----------------------------------------------------------------------------------------------
+// Interface for non-lessons
+//----------------------------------------------------------------------------------------------
+
+interface LessonManagerStarter {
+    public void goToId(long id);
 }
