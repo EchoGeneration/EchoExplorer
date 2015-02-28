@@ -1,14 +1,19 @@
 package com.spencerbarton.echoexplorer.database;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+
+import java.io.IOException;
 
 
 public class TutorialStepDb {
 
-    static class TutorialStepTable {
+    static class TutorialStepTable implements Databases.Packer<TutorialStep> {
 
-        // The name of the table
+        // The name of the database and table
+        private static final String dbName = "TutorialDatabase";
         private static final String tableName = TutorialStep.class.getName();
 
         // The columns of the table
@@ -19,20 +24,21 @@ public class TutorialStepDb {
         private static final String textDirCol = "textDirections";
         private static final String nextStepCol = "nextStep";
 
+        // The database containing the tutorial step table
         private final SQLiteDatabase tutorialDb;
 
         // Constructor
-        public TutorialStepTable(SQLiteDatabase tutorialDb) {
-            this.tutorialDb = tutorialDb;
+        public TutorialStepTable(Context context)  throws SQLiteException, IOException {
+            this.tutorialDb = Databases.StaticDatabase.openDatabase(context, dbName);
         }
 
         // Given a cursor, retrieves all the columns and packs them into a Tutorial Step structure
-        private static TutorialStep packTutorialStep(Cursor cursor) {
-            int tutorialId = Integer.parseInt(Databases.getColumnByName(cursor, tutorialIdCol));
-            String audioDir = Databases.getColumnByName(cursor, audioDirCol);
-            String echoFile = Databases.getColumnByName(cursor, echoCol);
-            String textDir = Databases.getColumnByName(cursor, echoCol);
-            int nextStep = Integer.parseInt(Databases.getColumnByName(cursor, nextStepCol));
+        public TutorialStep pack(Cursor cursor) {
+            int tutorialId = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor, tutorialIdCol));
+            String audioDir = Databases.CursorHelper.getColumnByName(cursor, audioDirCol);
+            String echoFile = Databases.CursorHelper.getColumnByName(cursor, echoCol);
+            String textDir = Databases.CursorHelper.getColumnByName(cursor, echoCol);
+            int nextStep = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor, nextStepCol));
 
             return new TutorialStep(tutorialId, audioDir, echoFile, textDir, nextStep);
         }
@@ -63,7 +69,7 @@ public class TutorialStepDb {
                 return null;
             }
 
-            return packTutorialStep(cursor);
+            return this.pack(cursor);
         }
 
         // Gets a list of all the tutorial names, sorted
@@ -81,14 +87,7 @@ public class TutorialStepDb {
             int i = 0;
             TutorialStep[] entries = new TutorialStep[cursor.getCount()];
 
-            // Iterate over the entries, and collect them into an array
-            while (!cursor.isAfterLast()) {
-                entries[i] = packTutorialStep(cursor);
-                cursor.moveToNext();
-                i += 1;
-            }
-
-            return entries;
+            return Databases.CursorHelper.getAllEntries(cursor, this);
         }
     }
 

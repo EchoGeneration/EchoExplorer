@@ -10,46 +10,60 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 
-public class Databases {
+public final class Databases {
 
-    // Provides a convenient wrapper to access a column
-    public static String getColumnByName(Cursor dbCursor, String colName) {
-        return dbCursor.getString(dbCursor.getColumnIndex(colName));
+    // This is to insure that Databases is a static class
+    private Databases() {}
+
+    // Defines an interface for constructing an object T using a row from a cursor
+    public interface Packer<T> {
+        T pack(Cursor cursor);
     }
 
+    // We can suppress the unchecked warning because the compiler statically enforces that entry.cls
+    // is the class corresponding to type T
+    @SuppressWarnings("unchecked")
+    static class CursorHelper {
 
-    static class TutorialDatabase  {
+        private CursorHelper() {}
+
+        // Provides a convenient wrapper to access a column
+        public static String getColumnByName(Cursor dbCursor, String colName) {
+            return dbCursor.getString(dbCursor.getColumnIndex(colName));
+        }
+
+        public static <T> T[] getAllEntries(Cursor cursor, Packer<T> packer) {
+            int i = 0;
+            T[] entries = (T[]) Array.newInstance(packer.getClass(), cursor.getCount());
+
+            // Iterate over the entries, and collect them into an array
+            while (!cursor.isAfterLast()) {
+                entries[i] = packer.pack(cursor);
+                cursor.moveToNext();
+                i += 1;
+            }
+
+            return entries;
+        }
+    }
+
+    static final class StaticDatabase  {
 
         // Parameters representing the state of the database
         private static final SQLiteDatabase.CursorFactory cursorFactory = null;
 
-        // The path to the database file
-        private static final String packageName = TutorialDatabase.class.getPackage().getName();
-        private static final String dbName = TutorialDatabase.class.getName();
-        private static final String dbPath = "/data/data/" + packageName + "/databases/" + dbName;
+        // The directory containing the database file
+        private static final String packageName = StaticDatabase.class.getPackage().getName();
+        private static final String dbDir = "/data/data/" + packageName + "/databases/";
 
-        private final Context context;
-        private SQLiteDatabase tutorialDb;
-
-        public TutorialDatabase(Context context) throws SQLiteException, IOException {
-            this.context = context;
-            this.tutorialDb = openDatabase(context);
-        }
+        // Ensures that this class is static (cannot be instantiated)
+        private StaticDatabase() {}
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         // Private Methods
         ////////////////////////////////////////////////////////////////////////////////////////////
-
-        private static SQLiteDatabase openDatabase(Context context) throws IOException, SQLiteException {
-            /* If the database is not present, then copy it from the assets/ folder.
-             * This is a one-time operation. */
-            if (!dbExists(dbPath)) {
-                fetchDatabase(context, dbName, dbPath);
-            }
-
-            return SQLiteDatabase.openDatabase(dbPath, cursorFactory, SQLiteDatabase.OPEN_READONLY);
-        }
 
         private static boolean dbExists(String path) {
             File dbFile;
@@ -89,12 +103,18 @@ public class Databases {
         ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        public SQLiteDatabase getDatabase() {
-            return tutorialDb;
-        }
+        public static SQLiteDatabase openDatabase(Context context, String dbName)
+                throws IOException, SQLiteException
+        {
+            String path = dbDir + dbName;
 
-        public void closeDatabase() {
-            tutorialDb.close();
+            /* If the database is not present, then copy it from the assets/ folder.
+             * This is a one-time operation. */
+            if (!dbExists(path)) {
+                fetchDatabase(context, dbName, path);
+            }
+
+            return SQLiteDatabase.openDatabase(path, cursorFactory, SQLiteDatabase.OPEN_READONLY);
         }
 
     }
