@@ -1,26 +1,19 @@
 package com.spencerbarton.echoexplorer;
 
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,6 +26,8 @@ public class TutorialsMenuActivity extends ActionBarActivity {
     private static final String TAG = "TutorialsMenuActivity";
     public static final String EXTRA_TUTORIAL_NAME = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_NAME";
     public static final String EXTRA_TUTORIAL_ID = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_ID";
+    public static final String EXTRA_TUTORIAL_PREV_ID = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_PREV_ID";
+    public static final String EXTRA_TUTORIAL_NEXT_ID = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_NEXT_ID";
 
     //----------------------------------------------------------------------------------------------
     // Startup
@@ -40,16 +35,37 @@ public class TutorialsMenuActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Populate layout and defaults
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorials_menu);
+
+        // Load all tutorials and evaluation names
+        // TODO
+
+        populateListView();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_generic, menu);
+        return true;
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // ListView Details
+    //----------------------------------------------------------------------------------------------
+
+    private void populateListView() {
+        // TODO adapt and clean-up
 
         final ListView listview = (ListView) findViewById(R.id.tutorialListView);
         String[] values = new String[] { "Right/Left Sounds", "Right/Left Echos",
                 "Right/Left 2nd Echo", "Moving Closer", "Moving Away"};
-        final ArrayList<String> list = new ArrayList<String>();
-        for(String s: values) {
-            list.add(s);
-        }
+        final List<String> list = Arrays.asList(values);
 
         final StableArrayAdapter adapter = new StableArrayAdapter(this,
                 android.R.layout.simple_list_item_1, list);
@@ -79,16 +95,6 @@ public class TutorialsMenuActivity extends ActionBarActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_generic, menu);
-        return true;
-    }
-
-    //----------------------------------------------------------------------------------------------
-    // ListView Adapter
-    //----------------------------------------------------------------------------------------------
 
     private class StableArrayAdapter extends ArrayAdapter<String> {
 

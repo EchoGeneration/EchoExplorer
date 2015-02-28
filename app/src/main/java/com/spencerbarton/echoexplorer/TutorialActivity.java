@@ -22,6 +22,9 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     private final static String TAG = "TutorialActivity";
     private String mName = "";
     private SwipeGestureDetector mSwipeGestureDetector;
+    private long mThisActivityId;
+    private long mNextActivityId;
+    private long mPrevActivityId;
 
     //----------------------------------------------------------------------------------------------
     // Startup
@@ -35,10 +38,10 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
         // Extract info on which tutorial was instantiated
         Intent intent = getIntent();
         // TODO extract tutorial id and then look-up info in DB
-        // TODO replace name with id
         mName = intent.getStringExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_NAME);
-        long id = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_ID, 0);
-        Log.i(TAG, "Id: " + id + ", Name: " + mName);
+        mThisActivityId = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_ID, -1);
+        mNextActivityId = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_PREV_ID, -1);
+        mPrevActivityId = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_NEXT_ID, -1);
 
         // Add gesture recognition
         mSwipeGestureDetector = new SwipeGestureDetector(this, this);
@@ -72,14 +75,20 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     public void onSwipeRight() {
 
         // Previous step or tutorial
-        Log.i(TAG, "RIGHT");
+        if (mPrevActivityId < 0) {
+            returnToMenu();
+        } else {
+            startNewActivity(mNextActivityId, );
+        }
     }
 
     @Override
     public void onSwipeLeft() {
 
         // Next step or tutorial
-        Log.i(TAG, "LEFT");
+        if (mNextActivityId < 0) {
+            returnToMenu();
+        }
     }
 
     @Override
@@ -91,8 +100,10 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
     @Override
     public void onSwipeDown() {
+        returnToMenu();
+    }
 
-        // Return to menu
+    private void returnToMenu() {
         Intent intent = new Intent(this, TutorialsMenuActivity.class);
         startActivity(intent);
     }
