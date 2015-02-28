@@ -13,6 +13,9 @@ import java.io.IOException;
  */
 public class TutorialEvaluationsDb {
 
+    public static final String TYPE_TUTORIAL = "com.spencerbarton.echoexplorer.TYPE_TUTORIAL";
+    public static final String TYPE_EVALUATION = "com.spencerbarton.echoexplorer.TYPE_EVALUATION";
+
     public static class TutorialEvaluationsTable implements Databases.Packer<TutorialEvaluations> {
 
         private static final String tag = TutorialEvaluationsTable.class.getName();
@@ -46,6 +49,7 @@ public class TutorialEvaluationsDb {
             return new TutorialEvaluations(name, type, ordering);
         }
 
+        // Get all ordered by 'order'
         public TutorialEvaluations[] getAllEntries() {
             String query = "select * from ? ORDER BY ? ASC";
 
@@ -64,9 +68,9 @@ public class TutorialEvaluationsDb {
 
     public static class TutorialEvaluations {
 
-        String name;
-        String type;
-        int ordering;
+        public String name;
+        public String type;
+        public int ordering;
 
         public TutorialEvaluations(String name, String type, int ordering)
         {

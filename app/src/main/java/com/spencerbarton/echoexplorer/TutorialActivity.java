@@ -1,21 +1,12 @@
 package com.spencerbarton.echoexplorer;
 
 import android.content.Intent;
-import android.gesture.Gesture;
-import android.gesture.GestureLibraries;
-import android.gesture.GestureLibrary;
-import android.gesture.GestureOverlayView;
-import android.gesture.GestureOverlayView.OnGesturePerformedListener;
-import android.gesture.Prediction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 public class TutorialActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler {
 
@@ -40,8 +31,6 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
         // TODO extract tutorial id and then look-up info in DB
         mName = intent.getStringExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_NAME);
         mThisActivityId = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_ID, -1);
-        mNextActivityId = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_PREV_ID, -1);
-        mPrevActivityId = intent.getLongExtra(TutorialsMenuActivity.EXTRA_TUTORIAL_NEXT_ID, -1);
 
         // Add gesture recognition
         mSwipeGestureDetector = new SwipeGestureDetector(this, this);
@@ -103,8 +92,4 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
         returnToMenu();
     }
 
-    private void returnToMenu() {
-        Intent intent = new Intent(this, TutorialsMenuActivity.class);
-        startActivity(intent);
-    }
 }
