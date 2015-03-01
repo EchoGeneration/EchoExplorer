@@ -35,13 +35,13 @@ public final class Databases {
             return dbCursor.getString(dbCursor.getColumnIndex(colName));
         }
 
-        public static <T> T[] getAllEntries(Cursor cursor, Packer<T> dbhelp) {
+        public static <T> T[] getAllEntries(Cursor cursor, Packer<T> dbHelp) {
             int i = 0;
-            T[] entries = (T[]) Array.newInstance(dbhelp.getClass(), cursor.getCount());
+            T[] entries = (T[]) Array.newInstance(dbHelp.getClass(), cursor.getCount());
 
             // Iterate over the entries, and collect them into an array
             while (!cursor.isAfterLast()) {
-                entries[i] = dbhelp.pack(cursor);
+                entries[i] = dbHelp.pack(cursor);
                 cursor.moveToNext();
                 i += 1;
             }
@@ -108,7 +108,7 @@ public final class Databases {
 
 
         public static SQLiteDatabase openDatabase(Context context, String dbName)
-                throws IOException, SQLiteException
+            throws IOException, SQLiteException
         {
             Log.e(tag, "Opening up database: " + dbName);
             String path = dbDir + dbName;

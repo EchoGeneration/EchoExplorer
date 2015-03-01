@@ -8,11 +8,20 @@ import android.util.Log;
 
 import java.io.IOException;
 
-public class TutorialStepDb {
+/* This class encapsulates the functionality for making queries on the TutorialStep table. The
+ * Tutorial Step table contains metadata about a step of a tutorial lesson. A tutorial lesson is
+ * a sequence of these steps. It contains the number of the lesson it belongs to, which is used to
+ * search the table based on the lesson. It contains the step number, which provides a relative
+ * ordering to other steps in the same lesson. It also contains the file that contains the audio
+ * for directions for the step, the audio file that contains the echo for the step, and the
+ * text version of the directions.
+ */
+public class TutorialStepTable {
 
-    public static class TutorialStepTable implements Databases.Packer<TutorialStep> {
+    public static class TutorialStepTableHelp implements Databases.Packer<TutorialStep> {
 
-        private static final String tag = TutorialStepTable.class.getName();
+        // A tag for logging messages
+        private static final String tag = TutorialStepTableHelp.class.getName();
 
         // The name of the database and table
         private static final String dbName = "LessonDatabase";
@@ -30,7 +39,7 @@ public class TutorialStepDb {
         private final SQLiteDatabase tutorialDb;
 
         // Constructor
-        public TutorialStepTable(Context context)  throws SQLiteException, IOException {
+        public TutorialStepTableHelp(Context context)  throws SQLiteException, IOException {
             this.tutorialDb = Databases.StaticDatabase.openDatabase(context, dbName);
         }
 
