@@ -26,7 +26,7 @@
         </service>
 
         <activity
-            android:name=".TutorialsMenuActivity"
+            android:name=".LessonsMenuActivity"
             android:label="@string/title_activity_tutorials_menu"
             android:parentActivityName=".MainActivity" >
 
@@ -38,18 +38,18 @@
         <activity
             android:name=".TutorialActivity"
             android:label="@string/title_activity_tutorial"
-            android:parentActivityName=".TutorialsMenuActivity" >
+            android:parentActivityName=".LessonsMenuActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.spencerbarton.echoexplorer.TutorialsMenuActivity" />
+                android:value="com.spencerbarton.echoexplorer.LessonsMenuActivity" />
         </activity>
         <activity
             android:name=".EvaluationActivity"
             android:label="@string/title_activity_evaluation"
-            android:parentActivityName=".TutorialsMenuActivity" >
+            android:parentActivityName=".LessonsMenuActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.spencerbarton.echoexplorer.TutorialsMenuActivity" />
+                android:value="com.spencerbarton.echoexplorer.LessonsMenuActivity" />
         </activity>
     </application>
 
