@@ -11,6 +11,7 @@ import java.io.IOException;
 /**
  * Created by bmperez on 2/27/15.
  */
+// TODO reorganize like the tutorials
 public class EvaluationStepDb {
 
     public static class EvaluationStepTable implements Databases.Packer<EvaluationStep> {

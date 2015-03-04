@@ -15,18 +15,25 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.spencerbarton.echoexplorer.database.TutorialStepDb.TutorialStepTable;
-import com.spencerbarton.echoexplorer.database.TutorialStepDb.TutorialStep;
+import com.spencerbarton.echoexplorer.database.TutorialStepTable.TutorialStepTableHelp;
+import com.spencerbarton.echoexplorer.database.TutorialStepTable.TutorialStep;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+// TODO record if step directions have already been played
+// TODO abstract lesson step
+// TODO complete evaluations
 
 public class TutorialActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler {
 
     private final static String TAG = "TutorialActivity";
     private SwipeGestureDetector mSwipeGestureDetector;
     private LessonManager mLessonManager;
-    private String mName = "";
-    private TutorialStep[] mSteps;
+    private String mTutorialName = "";
+    private TutorialStep[] mStepsData;
+    private List<TutorialStepManager> mStepManagers;
     private int mCurStep = 0;
 
     //----------------------------------------------------------------------------------------------
@@ -40,22 +47,22 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
         // Extract info on which tutorial was instantiated
         Intent intent = getIntent();
-        mName = intent.getStringExtra(LessonManager.EXTRA_LESSON_NAME);
-        int id = intent.getIntExtra(LessonManager.EXTRA_LESSON_ID, -1);
+        mTutorialName = intent.getStringExtra(LessonManager.EXTRA_LESSON_NAME);
+        int lessonNumber = intent.getIntExtra(LessonManager.EXTRA_LESSON_NUMBER, -1);
 
         // Add gesture recognition
         mSwipeGestureDetector = new SwipeGestureDetector(this, this);
 
         // Add lesson movement management
-        mLessonManager = new LessonManager(this, id);
+        mLessonManager = new LessonManager(this, lessonNumber);
 
         // Get tutorial steps
         try {
-            TutorialStepTable tutorialStepTable = new TutorialStepTable(this);
+            TutorialStepTableHelp tutorialStepTable = new TutorialStepTableHelp(this);
 
             // Get sorted steps
-            // TODO utilize updated method
-            mSteps = tutorialStepTable.getTutorials();
+            mStepsData = tutorialStepTable.getAllRows(lessonNumber);
+
         } catch (IOException e) {
 
             // Leave tutorial on data loading error
@@ -85,7 +92,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_generic, menu);
-        setTitle(mName);
+        setTitle(mTutorialName);
         return true;
     }
 
@@ -100,17 +107,35 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     //----------------------------------------------------------------------------------------------
 
     public void onEchoBtn(View view) {
-        Log.i(TAG, "Echo btn clicked");
+        mStepManagers.get(mCurStep).handleEchoBtn();
     }
 
     @Override
     public void onSwipeRight() {
-        mLessonManager.goNext();
+
+        mCurStep++;
+
+        // Go to next tutorial because done with steps
+        if (mCurStep >= mStepManagers.size()) {
+            mLessonManager.goNext();
+        } else {
+            mStepManagers.get(mCurStep).play();
+        }
+
     }
 
     @Override
     public void onSwipeLeft() {
-        mLessonManager.goPrev();
+
+        mCurStep--;
+
+        // Go to prev tutorial because done with steps
+        if (mCurStep < 0) {
+            mLessonManager.goPrev();
+        } else {
+            mStepManagers.get(mCurStep).play();
+        }
+
     }
 
     @Override
@@ -129,8 +154,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     // PlayAudioService
     //----------------------------------------------------------------------------------------------
 
-    // TODO put into serperate audio manager
-
+    // TODO put into separate audio manager
     private PlayAudioService mService;
     private boolean mIsBound = false;
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -141,6 +165,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
             PlayAudioService.PlayAudioBinder binder = (PlayAudioService.PlayAudioBinder) service;
             mService = binder.getService();
             mIsBound = true;
+            initSteps();
         }
 
         @Override
@@ -173,11 +198,23 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     // Step Object - handles all step specific activities
     //----------------------------------------------------------------------------------------------
 
-    // TODO abstract lesson step
-    // TODO add in step manegement
-    // TODO complete evaluations
-    // TODO test with DB
-    // TODO incorporate DB
+    // TODO assumes audio binding follows DB callback
+    public void initSteps() {
+
+        // Requires bound audio service
+        if (mIsBound) {
+
+            mStepManagers = new ArrayList<>();
+            for (TutorialStep step : mStepsData) {
+                mStepManagers.add(new TutorialStepManager(step, mService));
+            }
+
+            // Begin first step
+            mStepManagers.get(0).play();
+            mCurStep = 0;
+        }
+    }
+
     class TutorialStepManager {
 
         private int mDirectionsAudioFile;
@@ -192,9 +229,9 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
             // Get resource ids
             mDirectionsAudioFile = TutorialActivity.this.getResources().getIdentifier(
-                    stepData.directionsAudioFile, "raw", TutorialActivity.this.getPackageName());
+                    stepData.audioDirFile, "raw", TutorialActivity.this.getPackageName());
             mEchoAudioFile = TutorialActivity.this.getResources().getIdentifier(
-                    stepData.echoAudioFile, "raw", TutorialActivity.this.getPackageName());
+                    stepData.echoFile, "raw", TutorialActivity.this.getPackageName());
         }
 
         public void play() {

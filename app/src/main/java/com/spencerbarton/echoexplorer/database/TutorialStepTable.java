@@ -33,7 +33,7 @@ public class TutorialStepTable {
         private static final String stepNumberCol = "stepNumberCol";
         private static final String audioDirCol = "audioDirectionsFile";
         private static final String echoCol = "echoAudioFile";
-        private static final String textDirCol = "textDirections";
+        private static final String textDirectionsCol = "textDirectionsections";
 
         // The database containing the tutorial step table
         private final SQLiteDatabase tutorialDb;
@@ -51,9 +51,9 @@ public class TutorialStepTable {
                 stepNumberCol));
             String audioDirFile = Databases.CursorHelper.getColumnByName(cursor, audioDirCol);
             String echoFile = Databases.CursorHelper.getColumnByName(cursor, echoCol);
-            String textDir = Databases.CursorHelper.getColumnByName(cursor, textDirCol);
+            String textDirections = Databases.CursorHelper.getColumnByName(cursor, textDirectionsCol);
 
-            return new TutorialStep(lessonNumber, stepNumber, audioDirFile, echoFile, textDir);
+            return new TutorialStep(lessonNumber, stepNumber, audioDirFile, echoFile, textDirections);
         }
 
         // Given a lesson number and a step, retrieves a given step of a tutorial
@@ -118,16 +118,16 @@ public class TutorialStepTable {
         public int stepNumber;
         public String audioDirFile;
         public String echoFile;
-        public String textDir;
+        public String textDirections;
 
         public TutorialStep(int lessonNumber, int stepNumber, String audioDirFile, String echoFile,
-            String textDir)
+            String textDirections)
         {
             this.lessonNumber = lessonNumber;
             this.stepNumber = stepNumber;
             this.audioDirFile = audioDirFile;
             this.echoFile = echoFile;
-            this.textDir = textDir;
+            this.textDirections = textDirections;
         }
 
         // TODO: Define Getters and Setters?
