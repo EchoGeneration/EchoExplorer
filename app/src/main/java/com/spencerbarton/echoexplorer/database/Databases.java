@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -59,8 +60,10 @@ public final class Databases {
         private static final SQLiteDatabase.CursorFactory cursorFactory = null;
 
         // The directory containing the database file
-        private static final String packageName = StaticDatabase.class.getPackage().getName();
-        private static final String dbDir = "/data/data/" + packageName + "/databases/";
+        private static final String packageName = StaticDatabase.class.getPackage().getName(); // TODO use instead of hard coding
+        private static final String dataDir = Environment.getDataDirectory().getAbsolutePath();
+        private static final String dbDir = dataDir + "/data/com.spencerbarton.echoexplorer/databases/";
+        private static final String TAG = "StaticDatabase";
 
         // Ensures that this class is static (cannot be instantiated)
         private StaticDatabase() {}
@@ -110,17 +113,24 @@ public final class Databases {
         public static SQLiteDatabase openDatabase(Context context, String dbName)
             throws IOException, SQLiteException
         {
-            Log.e(tag, "Opening up database: " + dbName);
             String path = dbDir + dbName;
+            Log.i(tag, "Opening up database: " + path);
 
             /* If the database is not present, then copy it from the assets/ folder.
              * This is a one-time operation. */
             if (!dbExists(path)) {
-                Log.e(tag, "Copying database from the assets/ folder");
+                Log.i(tag, "Copying database from the assets/ folder");
+
+                // Create database directory
+                // TODO move elsewhere
+                File dbDirectory = new File(dbDir);
+                boolean success = dbDirectory.mkdir();
+                Log.i(TAG, "Created new database " + success);
+
                 fetchDatabase(context, dbName, path);
             }
 
-            Log.e(tag, "Opening the database as read only");
+            Log.i(tag, "Opening the database as read only");
             return SQLiteDatabase.openDatabase(path, cursorFactory, SQLiteDatabase.OPEN_READONLY);
         }
 
