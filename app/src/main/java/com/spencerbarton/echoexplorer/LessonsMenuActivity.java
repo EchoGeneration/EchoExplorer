@@ -24,9 +24,9 @@ import java.util.List;
 // TODO show tutorial completion/best score on eval
 // TODO checker to ensure all tutorial audio is present
 
-public class TutorialsMenuActivity extends ActionBarActivity {
+public class LessonsMenuActivity extends ActionBarActivity {
 
-    private static final String TAG = "TutorialsMenuActivity";
+    private static final String TAG = "LessonsMenuActivity";
     private static final int EVALUATION_COLOR = R.color.gray8;
     private static final int TUTORIAL_COLOR = R.color.gray7;
 
@@ -39,7 +39,7 @@ public class TutorialsMenuActivity extends ActionBarActivity {
 
         // Populate layout and defaults
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tutorials_menu);
+        setContentView(R.layout.activity_lessons_menu);
 
         try {
 
@@ -89,7 +89,7 @@ public class TutorialsMenuActivity extends ActionBarActivity {
                 Log.i(TAG, "Tut clicked pos: " + position + " id:" + id + " name: " + text);
 
                 // Create manager to handle loading lesson
-                LessonManagerStarter starter = new LessonManager(TutorialsMenuActivity.this);
+                LessonManagerStarter starter = new LessonManager(LessonsMenuActivity.this);
                 starter.goToLesson((int)id); // Can cast because was initially an int
             }
 
