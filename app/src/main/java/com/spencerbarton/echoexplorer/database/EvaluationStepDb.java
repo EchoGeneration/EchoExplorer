@@ -92,7 +92,7 @@ public class EvaluationStepDb {
         }
 
         // Gets a list of all the tutorials, sorted by lessonId, then by step number
-        public EvaluationStep[] getAllRows() {
+        public List<EvaluationStep> getAllRows() {
             String query = "select * from ? order by ? asc, ? asc";
 
             String[] args = {tableName, lessonNumberCol, stepNumberCol};
@@ -109,7 +109,7 @@ public class EvaluationStepDb {
         }
 
         // Given a lesson number, returns the tutorials in order of their steps
-        public EvaluationStep[] getAllRows(int lessonNumber) {
+        public List<EvaluationStep> getAllRows(int lessonNumber) {
             String query = "select * from ? where ? = ? order by ? asc";
 
             String[] args = {tableName, lessonNumberCol, Integer.toString(lessonNumber),

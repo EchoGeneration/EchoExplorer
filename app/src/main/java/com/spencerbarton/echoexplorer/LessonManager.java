@@ -9,6 +9,7 @@ import com.spencerbarton.echoexplorer.database.LessonTable.LessonTableHelp;
 import com.spencerbarton.echoexplorer.database.LessonTable.Lesson;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * This object is intended to aid with moving between tutorials and evaluations in order to abstract
@@ -39,7 +40,9 @@ public class LessonManager implements LessonManagerStarter{
         // Load table data
         try {
             mTutorialEvaluationsTable = new LessonTableHelp(context);
-            mLessons = mTutorialEvaluationsTable.getAllRows();
+            List<Lesson> lessons = mTutorialEvaluationsTable.getAllRows();
+            mLessons = new Lesson[lessons.size()];
+            lessons.toArray(mLessons);
         } catch (IOException e) {
 
             // Error so go home
@@ -50,7 +53,7 @@ public class LessonManager implements LessonManagerStarter{
     }
 
     public void goHome() {
-        Intent intent = new Intent(mContext, TutorialsMenuActivity.class);
+        Intent intent = new Intent(mContext, LessonsMenuActivity.class);
         intent.putExtra(EXTRA_LESSON_NUMBER, mLessonNumber);
         mContext.startActivity(intent);
     }

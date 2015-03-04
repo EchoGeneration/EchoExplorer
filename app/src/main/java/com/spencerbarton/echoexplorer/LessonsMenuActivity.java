@@ -45,13 +45,13 @@ public class LessonsMenuActivity extends ActionBarActivity {
 
             // Load all tutorials and evaluation names
             LessonTable.LessonTableHelp lessonTableHelp = new LessonTable.LessonTableHelp(this);
-            LessonTable.Lesson[] lessons = lessonTableHelp.getAllRows();
+            List<LessonTable.Lesson> lessons = lessonTableHelp.getAllRows();
             populateListView(lessons);
 
         } catch (IOException e) {
 
             // Error so go back
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
             finish();
         }
 
@@ -69,11 +69,11 @@ public class LessonsMenuActivity extends ActionBarActivity {
     // ListView Details
     //----------------------------------------------------------------------------------------------
 
-    private void populateListView(LessonTable.Lesson[] lessons) {
+    private void populateListView(List<LessonTable.Lesson> lessons) {
 
-        final LessonAdapter adapter = new LessonAdapter(this, Arrays.asList(lessons));
+        final LessonAdapter adapter = new LessonAdapter(this, lessons);
 
-        final ListView listview = (ListView) findViewById(R.id.tutorialListView);
+        final ListView listview = (ListView)findViewById(R.id.tutorialListView);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -145,6 +145,8 @@ public class LessonsMenuActivity extends ActionBarActivity {
                     textView.setTextColor(EVALUATION_COLOR);
                 }
                 textView.setText(lesson.name);
+            } else {
+                view = convertView;
             }
 
             return view;

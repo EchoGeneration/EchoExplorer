@@ -32,7 +32,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     private SwipeGestureDetector mSwipeGestureDetector;
     private LessonManager mLessonManager;
     private String mTutorialName = "";
-    private TutorialStep[] mStepsData;
+    private List<TutorialStep> mStepsData;
     private List<TutorialStepManager> mStepManagers;
     private int mCurStep = 0;
 

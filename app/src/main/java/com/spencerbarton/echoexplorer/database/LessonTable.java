@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.List;
 
 /* This class encapsulates the functionality for making queries on the Lesson table. The Lesson
  * table contains metadata about lessons, which are groups of tutorials or evaluations. It contains
@@ -30,11 +31,11 @@ public class LessonTable {
 
         // The name of the database and table
         private static final String dbName = "LessonDatabase";
-        private static final String tableName = Lesson.class.getName();
+        private static final String tableName = "Lesson";
 
         // The columns of the table
         private static final String _idCol = "_id";
-        private static final String lessonNumberCol = "ordering";
+        private static final String lessonNumberCol = "lessonNumber";
         private static final String nameCol = "name";
         private static final String typeCol = "type";
 
@@ -75,15 +76,16 @@ public class LessonTable {
         /* This function retrieves all the rows from the Lesson database, and returns it in an
          * array of Lesson structures, sorted by the lesson number field.
          */
-        public Lesson[] getAllRows() {
-            String query = "select * from ? ORDER BY ? ASC";
+        public List<Lesson> getAllRows() {
+            String query = "SELECT * FROM ? ORDER BY ? ASC";
 
-            String[] args = {tableName, lessonNumberCol};
-            Cursor cursor = this.tutorialDb.rawQuery(query, args);
-            Log.e(tag + ".getAllEntries", "Querying for all Lesson entries");
+            //String[] args = {tableName, lessonNumberCol};
+            String[] args = {};
+            Cursor cursor = this.tutorialDb.rawQuery("select * from " + tableName + " order by " + lessonNumberCol + " asc", args);
+            Log.i(tag + ".getAllEntries", "Querying for all Lesson entries");
 
             if (!cursor.moveToFirst()) {
-                Log.e(tag + ".getAllEntries", "Query result is empty!");
+                Log.i(tag + ".getAllEntries", "Query result is empty!");
                 return null;
             }
 

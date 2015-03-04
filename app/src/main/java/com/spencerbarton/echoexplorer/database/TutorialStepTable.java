@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.List;
 
 /* This class encapsulates the functionality for making queries on the TutorialStep table. The
  * Tutorial Step table contains metadata about a step of a tutorial lesson. A tutorial lesson is
@@ -76,7 +77,7 @@ public class TutorialStepTable {
         }
 
         // Gets a list of all the tutorials, sorted by lessonId, then by step number
-        public TutorialStep[] getAllRows() {
+        public List<TutorialStep> getAllRows() {
             String query = "select * from ? order by ? asc, ? asc";
 
             String[] args = {tableName, lessonNumberCol, stepNumberCol};
@@ -93,7 +94,7 @@ public class TutorialStepTable {
         }
 
         // Given a lesson number, returns the tutorials in order of their steps
-        public TutorialStep[] getAllRows(int lessonNumber) {
+        public List<TutorialStep> getAllRows(int lessonNumber) {
             String query = "select * from ? where ? = ? order by ? asc";
 
             String[] args = {tableName, lessonNumberCol, Integer.toString(lessonNumber),

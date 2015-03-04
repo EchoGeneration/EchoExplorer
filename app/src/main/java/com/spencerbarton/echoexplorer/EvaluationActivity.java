@@ -36,7 +36,7 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
     private SwipeGestureDetector mSwipeGestureDetector;
     private LessonManager mLessonManager;
     private String mEvaluationName = "";
-    private EvaluationStepDb.EvaluationStep[] mStepsData;
+    private List<EvaluationStepDb.EvaluationStep> mStepsData;
     private List<EvaluationStepManager> mStepManagers;
     private int mCurStep = 0;
 

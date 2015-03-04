@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Databases {
 
@@ -36,15 +38,13 @@ public final class Databases {
             return dbCursor.getString(dbCursor.getColumnIndex(colName));
         }
 
-        public static <T> T[] getAllEntries(Cursor cursor, Packer<T> dbHelp) {
-            int i = 0;
-            T[] entries = (T[]) Array.newInstance(dbHelp.getClass(), cursor.getCount());
+        public static <T> List<T> getAllEntries(Cursor cursor, Packer<T> dbHelp) {
+            List<T> entries = new ArrayList<>();
 
             // Iterate over the entries, and collect them into an array
             while (!cursor.isAfterLast()) {
-                entries[i] = dbHelp.pack(cursor);
+                entries.add(dbHelp.pack(cursor));
                 cursor.moveToNext();
-                i += 1;
             }
 
             return entries;

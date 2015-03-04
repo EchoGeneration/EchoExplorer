@@ -101,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void startTutorialsActivity(View view) {
-        Intent intent = new Intent(this, TutorialsMenuActivity.class);
+        Intent intent = new Intent(this, LessonsMenuActivity.class);
         startActivity(intent);
     }
 
