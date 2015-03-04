@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.spencerbarton.echoexplorer.database.TutorialEvaluationsDb;
-import com.spencerbarton.echoexplorer.database.TutorialEvaluationsDb.TutorialEvaluationsTable;
+import com.spencerbarton.echoexplorer.database.LessonTable;
+import com.spencerbarton.echoexplorer.database.LessonTable.LessonTableHelp;
+import com.spencerbarton.echoexplorer.database.LessonTable.Lesson;
 
 import java.io.IOException;
 
@@ -19,25 +20,25 @@ import java.io.IOException;
  */
 public class LessonManager implements LessonManagerStarter{
 
-    public static final String EXTRA_LESSON_ID = "com.spencerbarton.echoexplorer.EXTRA_LESSON_ID";
+    public static final String EXTRA_LESSON_NUMBER = "com.spencerbarton.echoexplorer.EXTRA_LESSON_NUMBER";
     public static final String EXTRA_LESSON_NAME = "com.spencerbarton.echoexplorer.EXTRA_LESSON_NAME";
     private static final String TAG = "ActivityManager";
-    private TutorialEvaluationsTable mTutorialEvaluationsTable;
+    private LessonTableHelp mTutorialEvaluationsTable;
     private Context mContext;
-    private long mId;
-    private TutorialEvaluationsDb.Lesson[] mLessons;
+    private int mLessonNumber;
+    private Lesson[] mLessons;
 
     public LessonManager(Context context) {
         this(context, -1);
     }
 
-    public LessonManager(Context context, long activityId) {
+    public LessonManager(Context context, int lessonNumber) {
         mContext = context;
-        mId = activityId;
+        mLessonNumber = lessonNumber;
 
         // Load table data
         try {
-            mTutorialEvaluationsTable = new TutorialEvaluationsTable(context);
+            mTutorialEvaluationsTable = new LessonTableHelp(context);
             mLessons = mTutorialEvaluationsTable.getAllRows();
         } catch (IOException e) {
 
@@ -50,7 +51,7 @@ public class LessonManager implements LessonManagerStarter{
 
     public void goHome() {
         Intent intent = new Intent(mContext, TutorialsMenuActivity.class);
-        intent.putExtra(EXTRA_LESSON_ID, mId);
+        intent.putExtra(EXTRA_LESSON_NUMBER, mLessonNumber);
         mContext.startActivity(intent);
     }
 
@@ -75,17 +76,16 @@ public class LessonManager implements LessonManagerStarter{
     // Helpers
     //----------------------------------------------------------------------------------------------
 
-    // TODO need lesson id
     private int findLessonIndex() {
         for (int i = 0; i < mLessons.length; i++) {
-            if (mLessons[i].id == mId) {
+            if (mLessons[i].lessonNumber == mLessonNumber) {
                 return i;
             }
         }
         return -1;
     }
 
-    private TutorialEvaluationsDb.Lesson findNextLesson() {
+    private Lesson findNextLesson() {
         int i = findLessonIndex();
         if ((0 <= i) && (i < (mLessons.length-1))) {
             return mLessons[i+1];
@@ -93,7 +93,7 @@ public class LessonManager implements LessonManagerStarter{
         return null;
     }
 
-    private TutorialEvaluationsDb.Lesson findPrevLesson() {
+    private Lesson findPrevLesson() {
         int i = findLessonIndex();
         if (0 < i) {
             return mLessons[i-1];
@@ -101,19 +101,19 @@ public class LessonManager implements LessonManagerStarter{
         return null;
     }
 
-    private void goToLesson(TutorialEvaluationsDb.Lesson lesson) {
+    private void goToLesson(Lesson lesson) {
         if (lesson != null) {
 
             // Pick which activity type to instantiate
             Intent intent;
-            if (lesson.name.equals(TutorialEvaluationsDb.TYPE_TUTORIAL)) {
+            if (lesson.name.equals(LessonTable.TYPE_TUTORIAL)) {
                 intent = new Intent(mContext, TutorialActivity.class);
             } else {
                 intent = new Intent(mContext, EvaluationActivity.class);
             }
 
             // Add some activity info
-            intent.putExtra(EXTRA_LESSON_ID, mId);
+            intent.putExtra(EXTRA_LESSON_NUMBER, mLessonNumber);
             intent.putExtra(EXTRA_LESSON_NAME, lesson.name);
             mContext.startActivity(intent);
 

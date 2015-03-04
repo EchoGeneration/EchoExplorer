@@ -4,12 +4,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -176,6 +174,10 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     //----------------------------------------------------------------------------------------------
 
     // TODO abstract lesson step
+    // TODO add in step manegement
+    // TODO complete evaluations
+    // TODO test with DB
+    // TODO incorporate DB
     class TutorialStepManager {
 
         private int mDirectionsAudioFile;
@@ -197,7 +199,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
         public void play() {
             postDirections();
-            playDirections();
+            playDirections(); // Goes into echo mode immediately after
         }
 
         private void postDirections() {
