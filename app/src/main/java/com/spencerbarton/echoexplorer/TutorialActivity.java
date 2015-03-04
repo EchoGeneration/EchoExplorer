@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO record if step directions have already been played
 // TODO abstract lesson step
 // TODO complete evaluations
+// TODO test - include real audio in db
 
 public class TutorialActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler {
 
