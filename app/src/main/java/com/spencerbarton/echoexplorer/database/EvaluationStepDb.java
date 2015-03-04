@@ -4,15 +4,28 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.ArrayMap;
 import android.util.Log;
 
+import com.spencerbarton.echoexplorer.EvaluationActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bmperez on 2/27/15.
  */
 // TODO reorganize like the tutorials
 public class EvaluationStepDb {
+
+    private static final String TAG = "EvaluationStepDb";
 
     public static class EvaluationStepTable implements Databases.Packer<EvaluationStep> {
 
@@ -122,7 +135,7 @@ public class EvaluationStepDb {
         public String directionsAudioFile;
         public String echoAudioFile;
         public String textDirections;
-        public String responseOptions;
+        public List<String> responseOptions;
         public int correctResponse;
 
         public EvaluationStep(int lessonNumber, int stepNumber, String directionsAudioFile,
@@ -134,8 +147,26 @@ public class EvaluationStepDb {
             this.directionsAudioFile = directionsAudioFile;
             this.echoAudioFile = echoAudioFile;
             this.textDirections = textDirections;
-            this.responseOptions = responseOptions;
+            this.responseOptions = parseResponseOptions(responseOptions);
             this.correctResponse = correctResponse;
+        }
+
+        private List<String> parseResponseOptions(String responseOptions) {
+            List<String> options = new ArrayList<>();
+
+            // Parse json
+            try {
+                JSONArray json = new JSONArray(responseOptions);
+                Log.i(TAG, "Parsed " + json.toString());
+
+                for (int i = 0; i < json.length(); i++) {
+                    options.add(json.getString(i));
+                }
+
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+            }
+            return options;
         }
     }
 }
