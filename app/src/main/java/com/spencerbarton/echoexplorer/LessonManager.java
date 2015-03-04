@@ -63,8 +63,8 @@ public class LessonManager implements LessonManagerStarter{
         goToLesson(findPrevLesson());
     }
 
-    public void goToId(long id) {
-        int i = findLessonIndex();
+    public void goToLesson(int lessonNumber) {
+        int i = findLessonIndex(lessonNumber);
         if (i < 0) {
             goHome();
         } else {
@@ -76,9 +76,15 @@ public class LessonManager implements LessonManagerStarter{
     // Helpers
     //----------------------------------------------------------------------------------------------
 
+    // Find current lesson index
     private int findLessonIndex() {
+        return findLessonIndex(mLessonNumber);
+    }
+
+    // Find given lesson index
+    private int findLessonIndex(int lessonNumber) {
         for (int i = 0; i < mLessons.length; i++) {
-            if (mLessons[i].lessonNumber == mLessonNumber) {
+            if (mLessons[i].lessonNumber == lessonNumber) {
                 return i;
             }
         }
@@ -129,5 +135,5 @@ public class LessonManager implements LessonManagerStarter{
 //----------------------------------------------------------------------------------------------
 
 interface LessonManagerStarter {
-    public void goToId(long id);
+    public void goToLesson(int lessonNumber);
 }
