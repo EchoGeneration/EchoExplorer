@@ -1,33 +1,34 @@
 package com.spencerbarton.echoexplorer;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.spencerbarton.echoexplorer.database.LessonTable;
+
+import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 // TODO add support for database object
 // TODO support tutorial desciption
 // TODO show tutorial completion/best score on eval
+// TODO checker to ensure all tutorial audio is present
 
 public class TutorialsMenuActivity extends ActionBarActivity {
 
     private static final String TAG = "TutorialsMenuActivity";
-    public static final String EXTRA_TUTORIAL_NAME = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_NAME";
-    public static final String EXTRA_TUTORIAL_ID = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_ID";
-    public static final String EXTRA_TUTORIAL_PREV_ID = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_PREV_ID";
-    public static final String EXTRA_TUTORIAL_NEXT_ID = "com.spencerbarton.echoexplorer.EXTRA_TUTORIAL_NEXT_ID";
+    private static final int EVALUATION_COLOR = R.color.gray8;
+    private static final int TUTORIAL_COLOR = R.color.gray7;
 
     //----------------------------------------------------------------------------------------------
     // Startup
@@ -40,10 +41,19 @@ public class TutorialsMenuActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorials_menu);
 
-        // Load all tutorials and evaluation names
-        // TODO
+        try {
 
-        populateListView();
+            // Load all tutorials and evaluation names
+            LessonTable.LessonTableHelp lessonTableHelp = new LessonTable.LessonTableHelp(this);
+            LessonTable.Lesson[] lessons = lessonTableHelp.getAllRows();
+            populateListView(lessons);
+
+        } catch (IOException e) {
+
+            // Error so go back
+            e.printStackTrace();
+            finish();
+        }
 
     }
 
@@ -59,17 +69,11 @@ public class TutorialsMenuActivity extends ActionBarActivity {
     // ListView Details
     //----------------------------------------------------------------------------------------------
 
-    private void populateListView() {
-        // TODO adapt and clean-up
+    private void populateListView(LessonTable.Lesson[] lessons) {
+
+        final LessonAdapter adapter = new LessonAdapter(this, Arrays.asList(lessons));
 
         final ListView listview = (ListView) findViewById(R.id.tutorialListView);
-        String[] values = new String[] { "Right/Left Sounds", "Right/Left Echos",
-                "Right/Left 2nd Echo", "Moving Closer", "Moving Away"};
-        final List<String> list = Arrays.asList(values);
-
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,
-                android.R.layout.simple_list_item_1, list);
-
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -77,6 +81,7 @@ public class TutorialsMenuActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
+
                 // Get textview text
                 TextView textView = (TextView) view;
                 String text = textView.getText().toString();
@@ -85,34 +90,64 @@ public class TutorialsMenuActivity extends ActionBarActivity {
 
                 // Create manager to handle loading lesson
                 LessonManagerStarter starter = new LessonManager(TutorialsMenuActivity.this);
-                starter.goToId(id);
+                starter.goToLesson((int)id); // Can cast because was initially an int
             }
 
         });
     }
 
 
-    private class StableArrayAdapter extends ArrayAdapter<String> {
+    private class LessonAdapter extends BaseAdapter {
 
-        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+        private LayoutInflater mInflater;
+        private final List<LessonTable.Lesson> mLessons;
 
-        public StableArrayAdapter(Context context, int textViewResourceId,
-                                  List<String> objects) {
-            super(context, textViewResourceId, objects);
-            for (int i = 0; i < objects.size(); ++i) {
-                mIdMap.put(objects.get(i), i);
-            }
+        public LessonAdapter(Context context, final List<LessonTable.Lesson> lessons) {
+            mInflater = LayoutInflater.from(context);
+            mLessons = lessons;
+        }
+
+        @Override
+        public int getCount() {
+            return mLessons.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mLessons.get(position);
         }
 
         @Override
         public long getItemId(int position) {
-            String item = getItem(position);
-            return mIdMap.get(item);
+            LessonTable.Lesson lesson = (LessonTable.Lesson) getItem(position);
+            return lesson.lessonNumber;
         }
 
         @Override
         public boolean hasStableIds() {
             return true;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = null;
+
+            // Create new
+            if (convertView == null) {
+                view = mInflater.inflate(R.layout.row_lesson_layout, parent, false);
+                TextView textView = (TextView) view.findViewById(R.id.row_lesson_name);
+
+                // Case on type of lesson
+                LessonTable.Lesson lesson = mLessons.get(position);
+                if (lesson.type.equals(LessonTable.TYPE_TUTORIAL)) {
+                    textView.setTextColor(TUTORIAL_COLOR);
+                } else {
+                    textView.setTextColor(EVALUATION_COLOR);
+                }
+                textView.setText(lesson.name);
+            }
+
+            return view;
         }
 
     }
