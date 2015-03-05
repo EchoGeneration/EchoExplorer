@@ -250,8 +250,8 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         }
 
         public void play() {
-            installChoiceBtns();
             postDirections();
+            installChoiceBtns();
             playDirections(); // Goes into echo mode immediately after
         }
 
@@ -302,11 +302,13 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (curChoice == mCorrectChoice) {
-                            toast(CORRECT_ANSWER);
-                            goToNextStep();
-                        } else {
-                            toast(INCORRECT_ANSWER);
+                        if (mDirectionsPlayed) {
+                            if (curChoice == mCorrectChoice) {
+                                toast(CORRECT_ANSWER);
+                                goToNextStep();
+                            } else {
+                                toast(INCORRECT_ANSWER);
+                            }
                         }
                     }
                 });

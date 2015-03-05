@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -83,7 +84,8 @@ public class LessonsMenuActivity extends ActionBarActivity {
                                     int position, long id) {
 
                 // Get textview text
-                TextView textView = (TextView) view;
+                LinearLayout layout = (LinearLayout) view;
+                TextView textView = (TextView) layout.findViewById(R.id.row_lesson_name);
                 String text = textView.getText().toString();
 
                 Log.i(TAG, "Tut clicked pos: " + position + " id:" + id + " name: " + text);

@@ -15,5 +15,7 @@
     <string name="tutorial_title_default">Tutorial Title</string>
     <string name="echo_btn_desc">echo button</string>
     <string name="title_activity_evaluation">Evaluation Title</string>
+    <string name="default_directions">Directions</string>
+    <string name="default_str">Default</string>
 
 </resources>
