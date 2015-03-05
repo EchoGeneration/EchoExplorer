@@ -211,7 +211,7 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
 
             mStepManagers = new ArrayList<>();
             for (EvaluationStepDb.EvaluationStep step : mStepsData) {
-                mStepManagers.add(new EvaluationStepManager(step, mService));
+                mStepManagers.add(new EvaluationStepManager(this, step, mService));
             }
 
             // Begin first step
@@ -232,8 +232,10 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         private int mCorrectChoice;
         private boolean mDirectionsPlayed = false;
         private PlayAudioService mAudioService;
+        private Context mContext;
 
-        public EvaluationStepManager(EvaluationStepDb.EvaluationStep stepData, PlayAudioService service) {
+        public EvaluationStepManager(Context context, EvaluationStepDb.EvaluationStep stepData, PlayAudioService service) {
+            mContext = context;
             mTextDirections = stepData.textDirections;
             mChoices = stepData.responseOptions;
             mCorrectChoice = stepData.correctResponse;
@@ -248,6 +250,7 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         }
 
         public void play() {
+            installChoiceBtns();
             postDirections();
             playDirections(); // Goes into echo mode immediately after
         }
@@ -258,12 +261,14 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         }
 
         private void playDirections() {
-            mAudioService.playAudio(mDirectionsAudioFile, new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mDirectionsPlayed = true;
-                }
-            });
+            if (!mDirectionsPlayed) {
+                mAudioService.playAudio(mDirectionsAudioFile, new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mDirectionsPlayed = true;
+                    }
+                });
+            }
         }
 
         public void handleEchoBtn() {
@@ -272,23 +277,25 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
             }
         }
 
-        // TODO load in choices, parse
         private void installChoiceBtns() {
             RadioGroup targetView = (RadioGroup) findViewById(R.id.eval_choice_btn_grp);
+            targetView.removeAllViews(); // Remove current buttons
 
             for (int i = 0; i < mChoices.size(); i++ ) {
                 String choice = mChoices.get(i);
 
-                Button btn = new Button(EvaluationActivity.this);
+                Button btn = new Button(mContext);
+
+                // Install btn, NOTE important that this happen before setting params
+                targetView.addView(btn);
+
+                // Set text
                 btn.setText(choice);
 
                 // Set to fill parent
                 ViewGroup.LayoutParams params = btn.getLayoutParams();
                 params.width = ViewGroup.LayoutParams.MATCH_PARENT;
                 btn.setLayoutParams(params);
-
-                // Install btn
-                targetView.addView(btn);
 
                 // Add on click handler
                 final int curChoice = i;

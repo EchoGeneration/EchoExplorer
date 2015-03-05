@@ -245,12 +245,14 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
         }
 
         private void playDirections() {
-            mAudioService.playAudio(mDirectionsAudioFile, new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mDirectionsPlayed = true;
-                }
-            });
+            if (!mDirectionsPlayed) {
+                mAudioService.playAudio(mDirectionsAudioFile, new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mediaPlayer) {
+                        mDirectionsPlayed = true;
+                    }
+                });
+            }
         }
 
         public void handleEchoBtn() {

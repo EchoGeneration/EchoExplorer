@@ -28,6 +28,7 @@
         <activity
             android:name=".LessonsMenuActivity"
             android:label="@string/title_activity_tutorials_menu"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" >
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -38,6 +39,7 @@
         <activity
             android:name=".TutorialActivity"
             android:label="@string/title_activity_tutorial"
+            android:screenOrientation="portrait"
             android:parentActivityName=".LessonsMenuActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -46,6 +48,7 @@
         <activity
             android:name=".EvaluationActivity"
             android:label="@string/title_activity_evaluation"
+            android:screenOrientation="portrait"
             android:parentActivityName=".LessonsMenuActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
