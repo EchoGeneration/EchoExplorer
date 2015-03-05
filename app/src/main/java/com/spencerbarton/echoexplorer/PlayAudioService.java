@@ -31,6 +31,10 @@ public class PlayAudioService extends Service {
     public void playAudio(int audioFile, final MediaPlayer.OnCompletionListener listener){
         try {
             mMediaPlayer = MediaPlayer.create(this, audioFile);
+            if (mMediaPlayer == null) {
+                Log.e(TAG, "MediaPlayer could not initialize, audio likely in wrong format (" +
+                    audioFile + ")");
+            }
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
