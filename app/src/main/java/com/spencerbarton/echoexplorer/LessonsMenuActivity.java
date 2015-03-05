@@ -22,7 +22,7 @@ import java.util.List;
 // TODO add support for database object
 // TODO support tutorial desciption
 // TODO show tutorial completion/best score on eval
-// TODO checker to ensure all tutorial audio is present
+// TODO checker to ensure all tutorial audio is present and named correctly (no extension)
 
 public class LessonsMenuActivity extends ActionBarActivity {
 
