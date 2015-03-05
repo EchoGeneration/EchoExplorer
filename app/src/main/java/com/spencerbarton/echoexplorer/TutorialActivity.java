@@ -113,11 +113,11 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     @Override
     public void onSwipeRight() {
 
-        mCurStep++;
+        mCurStep--;
 
-        // Go to next tutorial because done with steps
-        if (mCurStep >= mStepManagers.size()) {
-            mLessonManager.goNext();
+        // Go to prev tutorial because done with steps
+        if (mCurStep < 0) {
+            mLessonManager.goPrev();
         } else {
             mStepManagers.get(mCurStep).play();
         }
@@ -127,11 +127,11 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     @Override
     public void onSwipeLeft() {
 
-        mCurStep--;
+        mCurStep++;
 
-        // Go to prev tutorial because done with steps
-        if (mCurStep < 0) {
-            mLessonManager.goPrev();
+        // Go to next tutorial because done with steps
+        if (mCurStep >= mStepManagers.size()) {
+            mLessonManager.goNext();
         } else {
             mStepManagers.get(mCurStep).play();
         }

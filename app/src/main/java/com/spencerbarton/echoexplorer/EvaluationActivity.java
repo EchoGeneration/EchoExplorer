@@ -117,7 +117,15 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
 
     @Override
     public void onSwipeRight() {
-        goToNextStep();
+
+        mCurStep--;
+
+        // Go to prev tutorial because done with steps
+        if (mCurStep < 0) {
+            mLessonManager.goPrev();
+        } else {
+            mStepManagers.get(mCurStep).play();
+        }
     }
 
     private void goToNextStep() {
@@ -133,15 +141,7 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
 
     @Override
     public void onSwipeLeft() {
-
-        mCurStep--;
-
-        // Go to prev tutorial because done with steps
-        if (mCurStep < 0) {
-            mLessonManager.goPrev();
-        } else {
-            mStepManagers.get(mCurStep).play();
-        }
+        goToNextStep();
     }
 
     @Override
