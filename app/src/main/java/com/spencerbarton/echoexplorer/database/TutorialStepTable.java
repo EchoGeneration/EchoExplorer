@@ -31,10 +31,10 @@ public class TutorialStepTable {
         // The columns of the table
         private static final String _idCol = "_id";
         private static final String lessonNumberCol = "lessonNumber";
-        private static final String stepNumberCol = "stepNumberCol";
-        private static final String audioDirCol = "audioDirectionsFile";
+        private static final String stepNumberCol = "stepNumber";
+        private static final String audioDirCol = "directionsAudioFile";
         private static final String echoCol = "echoAudioFile";
-        private static final String textDirectionsCol = "textDirectionsections";
+        private static final String textDirectionsCol = "textDirections";
 
         // The database containing the tutorial step table
         private final SQLiteDatabase tutorialDb;
@@ -95,12 +95,20 @@ public class TutorialStepTable {
 
         // Given a lesson number, returns the tutorials in order of their steps
         public List<TutorialStep> getAllRows(int lessonNumber) {
+
+            /*
             String query = "select * from ? where ? = ? order by ? asc";
 
             String[] args = {tableName, lessonNumberCol, Integer.toString(lessonNumber),
                 stepNumberCol};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
-            Log.e(tag+".getTutorials", "Querying for all steps of tutorial " +
+            */
+            // TODO Query bug
+            String query = "select * from TutorialStep where lessonNumber = "
+                    + Integer.toString(lessonNumber) + " order by stepNumber asc";
+            Cursor cursor = this.tutorialDb.rawQuery(query, null);
+
+            Log.i(tag+".getTutorials", "Querying for all steps of tutorial " +
                 Integer.toString(lessonNumber));
 
             // The cursor is empty, the table is empty
