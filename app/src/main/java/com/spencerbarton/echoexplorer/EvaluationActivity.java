@@ -64,6 +64,11 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
             // Get sorted steps
             mStepsData = evaluationStepTable.getAllRows(lessonNumber);
 
+            if (mStepsData == null) {
+                Log.e(TAG, "No steps for the evaluation");
+                mLessonManager.goHome();
+            }
+
         } catch (IOException e) {
 
             // Leave tutorial on data loading error
@@ -72,7 +77,6 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         }
 
         onCreateAudio();
-
     }
 
     @Override

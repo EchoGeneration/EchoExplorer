@@ -17,10 +17,6 @@ import java.util.List;
  */
 public class LessonTable {
 
-    // The strings that are used to distinguish between tutorial lessons and evaluation lessons
-    public static final String TYPE_TUTORIAL = "com.spencerbarton.echoexplorer.TYPE_TUTORIAL";
-    public static final String TYPE_EVALUATION = "com.spencerbarton.echoexplorer.TYPE_EVALUATION";
-
     /* This class represents the Lesson table in the Tutorial Database, and implements opening
      * and querying the table for data.
      */
@@ -98,6 +94,9 @@ public class LessonTable {
      */
     public static class Lesson {
 
+        private static final String EVALUTATION = "evaluation";
+        private static final String TUTORIAL = "tutorial";
+
         // The columns in a row of the Lesson database
         public int lessonNumber;
         public String name;
@@ -110,5 +109,14 @@ public class LessonTable {
             this.name = name;
             this.type = type;
         }
+
+        public boolean isEvaluation() {
+            return type.equals(EVALUTATION);
+        }
+
+        public boolean isTutorial() {
+            return type.equals(TUTORIAL);
+        }
+
     }
 }

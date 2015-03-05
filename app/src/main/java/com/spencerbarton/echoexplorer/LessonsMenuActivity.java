@@ -130,7 +130,7 @@ public class LessonsMenuActivity extends ActionBarActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = null;
+            View view;
 
             // Create new
             if (convertView == null) {
@@ -139,7 +139,7 @@ public class LessonsMenuActivity extends ActionBarActivity {
 
                 // Case on type of lesson
                 LessonTable.Lesson lesson = mLessons.get(position);
-                if (lesson.type.equals(LessonTable.TYPE_TUTORIAL)) {
+                if (lesson.isTutorial()) {
                     textView.setTextColor(TUTORIAL_COLOR);
                 } else {
                     textView.setTextColor(EVALUATION_COLOR);

@@ -115,14 +115,14 @@ public class LessonManager implements LessonManagerStarter{
 
             // Pick which activity type to instantiate
             Intent intent;
-            if (lesson.name.equals(LessonTable.TYPE_TUTORIAL)) {
+            if (lesson.isTutorial()) {
                 intent = new Intent(mContext, TutorialActivity.class);
             } else {
                 intent = new Intent(mContext, EvaluationActivity.class);
             }
 
             // Add some activity info
-            intent.putExtra(EXTRA_LESSON_NUMBER, mLessonNumber);
+            intent.putExtra(EXTRA_LESSON_NUMBER, lesson.lessonNumber);
             intent.putExtra(EXTRA_LESSON_NAME, lesson.name);
             mContext.startActivity(intent);
 

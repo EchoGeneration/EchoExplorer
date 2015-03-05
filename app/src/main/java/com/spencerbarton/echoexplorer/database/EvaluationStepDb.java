@@ -110,12 +110,19 @@ public class EvaluationStepDb {
 
         // Given a lesson number, returns the tutorials in order of their steps
         public List<EvaluationStep> getAllRows(int lessonNumber) {
+            /*
             String query = "select * from ? where ? = ? order by ? asc";
 
             String[] args = {tableName, lessonNumberCol, Integer.toString(lessonNumber),
                     stepNumberCol};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
-            Log.e(tag+".getTutorials", "Querying for all steps of tutorial " +
+            */
+            // TODO debugging:
+            Cursor cursor = this.tutorialDb.rawQuery("select * from EvaluationStep where lessonNumber = "
+                    + Integer.toString(lessonNumber) + " order by stepNumber asc", null);
+
+
+            Log.i(tag+".getTutorials", "Querying for all steps of tutorial " +
                     Integer.toString(lessonNumber));
 
             // The cursor is empty, the table is empty
