@@ -118,6 +118,8 @@ public final class Databases {
 
             /* If the database is not present, then copy it from the assets/ folder.
              * This is a one-time operation. */
+            /* TODO loading db every time because sometimes db file updated
+               TODO need to change this after debugging phase
             if (!dbExists(path)) {
                 Log.i(tag, "Copying database from the assets/ folder");
 
@@ -129,6 +131,8 @@ public final class Databases {
 
                 fetchDatabase(context, dbName, path);
             }
+            */
+            fetchDatabase(context, dbName, path);
 
             Log.i(tag, "Opening the database as read only");
             return SQLiteDatabase.openDatabase(path, cursorFactory, SQLiteDatabase.OPEN_READONLY);
