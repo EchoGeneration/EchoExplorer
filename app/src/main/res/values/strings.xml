@@ -7,7 +7,7 @@
     <string name="action_settings">Settings</string>
     <string name="playsound">Play Sound</string>
     <string name="play_echos">Play Distance Echos</string>
-    <string name="title_activity_tutorials_menu">Tutorials</string>
+    <string name="title_activity_tutorials_menu">Lessons</string>
     <string name="tutorials_menu_header">Tutorials</string>
     <string name="tutorials_menu_directions">Select any tutorial to begin. It is recommended that you take tutorials in order.</string>
     <string name="title_activity_tutorial">TutorialActivity</string>
