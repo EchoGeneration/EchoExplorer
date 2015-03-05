@@ -73,11 +73,9 @@ public class LessonTable {
          * array of Lesson structures, sorted by the lesson number field.
          */
         public List<Lesson> getAllRows() {
-            String query = "SELECT * FROM ? ORDER BY ? ASC";
+            String query = "SELECT * FROM " + tableName + " ORDER BY " + lessonNumberCol + " ASC";
 
-            //String[] args = {tableName, lessonNumberCol};
-            String[] args = {};
-            Cursor cursor = this.tutorialDb.rawQuery("select * from " + tableName + " order by " + lessonNumberCol + " asc", args);
+            Cursor cursor = this.tutorialDb.rawQuery(query, null);
             Log.i(tag + ".getAllEntries", "Querying for all Lesson entries");
 
             if (!cursor.moveToFirst()) {

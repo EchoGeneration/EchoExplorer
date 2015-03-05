@@ -26,7 +26,7 @@ public class TutorialStepTable {
 
         // The name of the database and table
         private static final String dbName = "LessonDatabase";
-        private static final String tableName = TutorialStep.class.getName();
+        private static final String tableName = "TutorialStep";
 
         // The columns of the table
         private static final String _idCol = "_id";
@@ -59,10 +59,10 @@ public class TutorialStepTable {
 
         // Given a lesson number and a step, retrieves a given step of a tutorial
         public TutorialStep getRow(int lessonNumber, int stepNumber) {
-            String query = "select * from ? where ? = ? and ? = ?";
+            String query = "SELECT * FROM " + tableName + " where " + lessonNumberCol + " = ? and "+
+                stepNumberCol + " = ?";
 
-            String[] args = {tableName, lessonNumberCol, Integer.toString(lessonNumber),
-                stepNumberCol, Integer.toString(stepNumber)};
+            String[] args = {Integer.toString(lessonNumber), Integer.toString(stepNumber)};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
             Log.e(tag+".getRow", "Querying for row with lessonId=" + Integer.toString(lessonNumber)+
                 " and stepNumber=" + Integer.toString(stepNumber));
@@ -78,11 +78,11 @@ public class TutorialStepTable {
 
         // Gets a list of all the tutorials, sorted by lessonId, then by step number
         public List<TutorialStep> getAllRows() {
-            String query = "select * from ? order by ? asc, ? asc";
+            String query = "SELECT * FROM " + tableName + " ORDER BY " + lessonNumberCol + " ASC, "
+                + " ASC";
 
-            String[] args = {tableName, lessonNumberCol, stepNumberCol};
-            Cursor cursor = this.tutorialDb.rawQuery(query, args);
-            Log.e(tag+".getTutorials", "Querying for all tutorial steps");
+            Cursor cursor = this.tutorialDb.rawQuery(query, null);
+            Log.i(tag+".getTutorials", "Querying for all tutorial steps");
 
             // The cursor is empty, the table is empty
             if (!cursor.moveToFirst()) {
@@ -95,19 +95,12 @@ public class TutorialStepTable {
 
         // Given a lesson number, returns the tutorials in order of their steps
         public List<TutorialStep> getAllRows(int lessonNumber) {
+            String query = "SELECT * FROM " + tableName + " where " + lessonNumberCol + " = ? " +
+                "ORDER BY " + stepNumberCol + " ASC";
 
-            /*
-            String query = "select * from ? where ? = ? order by ? asc";
 
-            String[] args = {tableName, lessonNumberCol, Integer.toString(lessonNumber),
-                stepNumberCol};
+            String[] args = {Integer.toString(lessonNumber)};
             Cursor cursor = this.tutorialDb.rawQuery(query, args);
-            */
-            // TODO Query bug
-            String query = "select * from TutorialStep where lessonNumber = "
-                    + Integer.toString(lessonNumber) + " order by stepNumber asc";
-            Cursor cursor = this.tutorialDb.rawQuery(query, null);
-
             Log.i(tag+".getTutorials", "Querying for all steps of tutorial " +
                 Integer.toString(lessonNumber));
 
