@@ -28,6 +28,7 @@ public final class Databases {
 
     // We can suppress the unchecked warning because the compiler statically enforces that entry.cls
     // is the class corresponding to type T
+    // This will cause a conflict
     @SuppressWarnings("unchecked")
     static class CursorHelper {
 
