@@ -24,19 +24,4 @@
         android:id="@+id/btn_tutorials"
         android:onClick="startTutorialsActivity"/>
 
-    <!-- TODO remove when done debugging -->
-    <Button
-        android:id="@+id/btn_sound"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/playsound"
-        android:onClick="playAudio"/>
-
-    <Button
-        android:id="@+id/btn_echos"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/play_echos"
-        android:onClick="playEchos"/>
-
 </LinearLayout>
