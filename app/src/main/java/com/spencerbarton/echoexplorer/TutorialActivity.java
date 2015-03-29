@@ -106,7 +106,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     //----------------------------------------------------------------------------------------------
 
     public void onEchoBtn(View view) {
-        mStepManagers.get(mCurStep).handleEchoBtn();
+        Log.d("Echo Button", "Echo button pressed"); mStepManagers.get(mCurStep).handleEchoBtn();
     }
 
     @Override
