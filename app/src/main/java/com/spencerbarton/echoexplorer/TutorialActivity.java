@@ -98,8 +98,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mSwipeGestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
+        return mSwipeGestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
     //----------------------------------------------------------------------------------------------

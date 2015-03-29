@@ -25,12 +25,13 @@ import com.spencerbarton.echoexplorer.database.TutorialStepTable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 // TODO add btn listener
 // TODO abstract class with other lesson types?
-public class EvaluationActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler{
+public class EvaluationActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler {
 
     private final static String TAG = "EvaluationActivity";
     private SwipeGestureDetector mSwipeGestureDetector;
@@ -85,7 +86,6 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         onStartAudio();
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -103,8 +103,7 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mSwipeGestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
+        return mSwipeGestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -208,6 +207,9 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
 
         // Requires bound audio service
         if (mIsBound) {
+
+            // Randomize steps order
+            Collections.shuffle(mStepsData);
 
             mStepManagers = new ArrayList<>();
             for (EvaluationStepDb.EvaluationStep step : mStepsData) {

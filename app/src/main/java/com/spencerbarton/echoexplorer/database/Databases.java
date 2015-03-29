@@ -133,7 +133,7 @@ public final class Databases {
                 fetchDatabase(context, dbName, path);
             }
             //*/
-            //fetchDatabase(context, dbName, path);
+            fetchDatabase(context, dbName, path);
 
             Log.i(tag, "Opening the database as read only");
             return SQLiteDatabase.openDatabase(path, cursorFactory, SQLiteDatabase.OPEN_READONLY);

@@ -20,8 +20,8 @@ public class SwipeGestureDetector {
         mGestureDetectorCompat = new GestureDetectorCompat(context, new SwipeGestureListener(handler));
     }
 
-    public void onTouchEvent(MotionEvent event) {
-        mGestureDetectorCompat.onTouchEvent(event);
+    public boolean onTouchEvent(MotionEvent event) {
+        return mGestureDetectorCompat.onTouchEvent(event);
     }
 
     // Gesture detection listener
