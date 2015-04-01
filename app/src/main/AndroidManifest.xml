@@ -9,11 +9,10 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,8 +29,8 @@
         <activity
             android:name=".LessonsMenuActivity"
             android:label="@string/title_activity_tutorials_menu"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" >
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -41,8 +40,8 @@
         <activity
             android:name=".TutorialActivity"
             android:label="@string/title_activity_tutorial"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".LessonsMenuActivity" >
+            android:parentActivityName=".LessonsMenuActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.spencerbarton.echoexplorer.LessonsMenuActivity" />
@@ -50,11 +49,18 @@
         <activity
             android:name=".EvaluationActivity"
             android:label="@string/title_activity_evaluation"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".LessonsMenuActivity" >
+            android:parentActivityName=".LessonsMenuActivity"
+            android:screenOrientation="portrait" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.spencerbarton.echoexplorer.LessonsMenuActivity" />
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" >
+            <intent-filter>
+                <category android:name="android.intent.category.PREFERENCE" />
+            </intent-filter>
         </activity>
     </application>
 

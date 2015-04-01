@@ -4,9 +4,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -99,6 +101,19 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         getMenuInflater().inflate(R.menu.menu_generic, menu);
         setTitle(mEvaluationName);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -263,13 +278,15 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         }
 
         private void playDirections() {
-            if (!mDirectionsPlayed) {
+            if (audioDirEnabled() && !mDirectionsPlayed) {
                 mAudioService.playAudio(mDirectionsAudioFile, new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
                         mDirectionsPlayed = true;
                     }
                 });
+            } else {
+                mDirectionsPlayed = true;
             }
         }
 
@@ -319,6 +336,11 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
 
         private void toast(String msg) {
             Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        }
+
+        private boolean audioDirEnabled() {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+            return sharedPref.getBoolean(SettingsActivity.KEY_PREF_AUDIO_DIR, false);
         }
 
     }
