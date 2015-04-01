@@ -269,10 +269,15 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
                 });
             } else {
                 mDirectionsPlayed = true;
+                playEcho();
             }
         }
 
         public void handleEchoBtn() {
+            playEcho();
+        }
+
+        private void playEcho() {
             if (mDirectionsPlayed) {
                 mAudioService.playAudio(mEchoAudioFile);
             }

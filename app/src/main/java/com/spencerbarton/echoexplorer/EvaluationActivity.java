@@ -287,10 +287,15 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
                 });
             } else {
                 mDirectionsPlayed = true;
+                playEcho();
             }
         }
 
         public void handleEchoBtn() {
+            playEcho();
+        }
+
+        private void playEcho() {
             if (mDirectionsPlayed) {
                 mAudioService.playAudio(mEchoAudioFile);
             }
