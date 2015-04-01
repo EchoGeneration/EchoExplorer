@@ -18,17 +18,26 @@
         android:text="@string/default_directions"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-    <ImageButton
+    <Button
+        android:id="@+id/echo_btn"
+
+        android:text="Echo"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        android:contentDescription="@string/echo_btn_desc"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/echo_btn"
-        android:contentDescription="@string/echo_btn_desc"
-        android:clickable="false"
-        android:onClick="onEchoBtn"
-        android:src="@drawable/echo_btn"
         android:layout_gravity="center_vertical|bottom"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
 
+        android:background="@drawable/echo_button"
+        android:shadowColor="#A8A8A8"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+
+        android:onClick="onEchoBtn" />
 
 </RelativeLayout>
