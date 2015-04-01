@@ -5,4 +5,5 @@
     <dimen name="text_padding">5dp</dimen>
     <dimen name="listview_top_padding">10dp</dimen>
     <dimen name="lesson_list_text_size">30sp</dimen>
+    <dimen name="echo_btn_margin">10dp</dimen>
 </resources>

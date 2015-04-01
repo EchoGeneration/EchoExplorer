@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-// TODO add btn listener
 // TODO abstract class with other lesson types?
 public class EvaluationActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler {
 
@@ -131,11 +130,14 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
 
     @Override
     public void onSwipeRight() {
+        goToPrevStep();
+    }
 
+    private void goToPrevStep() {
         mCurStep--;
 
         // Go to prev tutorial because done with steps
-        if (mCurStep < 0) {
+        if(mCurStep<0) {
             mLessonManager.goPrev();
         } else {
             mStepManagers.get(mCurStep).play();
@@ -168,6 +170,14 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
     @Override
     public void onSwipeDown() {
         mLessonManager.goHome();
+    }
+
+    public void onPrevBtn(View view) {
+        goToPrevStep();
+    }
+
+    public void onNextBtn(View view) {
+        goToNextStep();
     }
 
     //----------------------------------------------------------------------------------------------

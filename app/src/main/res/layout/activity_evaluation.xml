@@ -30,16 +30,18 @@
     <Button
         android:id="@+id/echo_btn"
 
-        android:text="Echo"
+        android:text="@string/echo_btn"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         android:contentDescription="@string/echo_btn_desc"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|bottom"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_vertical"
+        android:layout_above="@+id/nav_btns"
         android:layout_centerHorizontal="true"
+
+        android:layout_marginBottom="@dimen/echo_btn_margin"
 
         android:background="@drawable/echo_button"
         android:shadowColor="#A8A8A8"
@@ -48,5 +50,31 @@
         android:shadowRadius="5"
 
         android:onClick="onEchoBtn" />
+
+    <LinearLayout
+        android:id="@+id/nav_btns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:id="@+id/prev_btn"
+            android:text="@string/prev_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onPrevBtn" />
+
+        <Button
+            android:id="@+id/next_btn"
+            android:text="@string/next_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onNextBtn" />
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -125,7 +125,10 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
     @Override
     public void onSwipeRight() {
+        goToPrevStep();
+    }
 
+    private void goToPrevStep() {
         mCurStep--;
 
         // Go to prev tutorial because done with steps
@@ -134,12 +137,14 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
         } else {
             mStepManagers.get(mCurStep).play();
         }
-
     }
 
     @Override
     public void onSwipeLeft() {
+        goToNextStep();
+    }
 
+    private void goToNextStep() {
         mCurStep++;
 
         // Go to next tutorial because done with steps
@@ -148,7 +153,6 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
         } else {
             mStepManagers.get(mCurStep).play();
         }
-
     }
 
     @Override
@@ -161,6 +165,15 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     @Override
     public void onSwipeDown() {
         mLessonManager.goHome();
+    }
+
+
+    public void onPrevBtn(View view) {
+        goToPrevStep();
+    }
+
+    public void onNextBtn(View view) {
+        goToNextStep();
     }
 
     //----------------------------------------------------------------------------------------------
