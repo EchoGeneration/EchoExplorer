@@ -62,7 +62,7 @@
         <Button
             android:id="@+id/prev_btn"
             android:text="@string/prev_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onPrevBtn" />
@@ -70,7 +70,7 @@
         <Button
             android:id="@+id/next_btn"
             android:text="@string/next_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="onNextBtn" />
