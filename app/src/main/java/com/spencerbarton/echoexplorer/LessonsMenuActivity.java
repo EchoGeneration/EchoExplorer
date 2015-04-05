@@ -153,15 +153,19 @@ public class LessonsMenuActivity extends ActionBarActivity {
             if (convertView == null) {
                 view = mInflater.inflate(R.layout.row_lesson_layout, parent, false);
                 TextView textView = (TextView) view.findViewById(R.id.row_lesson_name);
+                TextView textViewDesc = (TextView) view.findViewById(R.id.row_lesson_desc);
 
                 // Case on type of lesson
                 LessonTable.Lesson lesson = mLessons.get(position);
                 if (lesson.isTutorial()) {
                     textView.setTextColor(TUTORIAL_COLOR);
+                    textViewDesc.setTextColor(TUTORIAL_COLOR);
                 } else {
                     textView.setTextColor(EVALUATION_COLOR);
+                    textViewDesc.setTextColor(EVALUATION_COLOR);
                 }
                 textView.setText(lesson.name);
+                textViewDesc.setText(lesson.description);
             } else {
                 view = convertView;
             }

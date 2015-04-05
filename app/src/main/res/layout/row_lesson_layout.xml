@@ -14,10 +14,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/text_padding"
-        android:paddingBottom="@dimen/text_padding"
         android:id="@+id/row_lesson_name"
         android:text="@string/default_str"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/text_padding"
+        android:id="@+id/row_lesson_desc"
+        android:text="@string/default_str"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
 
 </LinearLayout>
 

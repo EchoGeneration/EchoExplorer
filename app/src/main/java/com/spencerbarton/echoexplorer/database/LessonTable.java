@@ -34,6 +34,7 @@ public class LessonTable {
         private static final String lessonNumberCol = "lessonNumber";
         private static final String nameCol = "name";
         private static final String typeCol = "type";
+        private static final String descriptionCol = "description";
 
         // The database containing the tutorial step table
         private final SQLiteDatabase tutorialDb;
@@ -65,8 +66,9 @@ public class LessonTable {
                     lessonNumberCol));
             String name = Databases.CursorHelper.getColumnByName(cursor, nameCol);
             String type = Databases.CursorHelper.getColumnByName(cursor, typeCol);
+            String description = Databases.CursorHelper.getColumnByName(cursor, descriptionCol);
 
-            return new Lesson(lessonNumber, name, type);
+            return new Lesson(lessonNumber, name, type, description);
         }
 
         /* This function retrieves all the rows from the Lesson database, and returns it in an
@@ -99,13 +101,15 @@ public class LessonTable {
         public int lessonNumber;
         public String name;
         public String type;
+        public String description;
 
         // The constructor method
-        public Lesson(int lessonNumber, String name, String type)
+        public Lesson(int lessonNumber, String name, String type, String description)
         {
             this.lessonNumber = lessonNumber;
             this.name = name;
             this.type = type;
+            this.description = description;
         }
 
         public boolean isEvaluation() {
