@@ -44,7 +44,7 @@
 
     <LinearLayout
         android:id="@+id/nav_btns"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|bottom"
         android:layout_alignParentBottom="true"
