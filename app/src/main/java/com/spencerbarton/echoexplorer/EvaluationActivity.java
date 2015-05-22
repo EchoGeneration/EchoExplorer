@@ -22,14 +22,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.spencerbarton.echoexplorer.database.EvaluationStepDb;
-import com.spencerbarton.echoexplorer.database.TutorialStepTable;
+import com.spencerbarton.echoexplorer.database.Evaluation;
+import com.spencerbarton.echoexplorer.database.EvaluationTable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 // TODO abstract class with other lesson types?
 public class EvaluationActivity extends ActionBarActivity implements SwipeGestureDetector.SwipeGestureHandler {
@@ -38,7 +38,7 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
     private SwipeGestureDetector mSwipeGestureDetector;
     private LessonManager mLessonManager;
     private String mEvaluationName = "";
-    private List<EvaluationStepDb.EvaluationStep> mStepsData;
+    private Evaluation[] mStepsData;
     private List<EvaluationStepManager> mStepManagers;
     private int mCurStep = 0;
 
@@ -60,19 +60,17 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
 
         // Get tutorial steps
         try {
-            EvaluationStepDb.EvaluationStepTable evaluationStepTable =
-                    new EvaluationStepDb.EvaluationStepTable(this);
+            EvaluationTable evaluationTable =
+                    new EvaluationTable(this);
 
             // Get sorted steps
-            mStepsData = evaluationStepTable.getAllRows(lessonNumber);
+            mStepsData = evaluationTable.getAllRows(lessonNumber);
 
             if (mStepsData == null) {
                 Log.e(TAG, "No steps for the evaluation");
                 mLessonManager.goHome();
             }
-
         } catch (IOException e) {
-
             // Leave tutorial on data loading error
             Log.e(TAG, e.getMessage());
             mLessonManager.goHome();
@@ -234,10 +232,10 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         if (mIsBound) {
 
             // Randomize steps order
-            Collections.shuffle(mStepsData);
+            Collections.shuffle(Arrays.asList(mStepsData));
 
             mStepManagers = new ArrayList<>();
-            for (EvaluationStepDb.EvaluationStep step : mStepsData) {
+            for (Evaluation step : mStepsData) {
                 mStepManagers.add(new EvaluationStepManager(this, step, mService));
             }
 
@@ -261,7 +259,7 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         private PlayAudioService mAudioService;
         private Context mContext;
 
-        public EvaluationStepManager(Context context, EvaluationStepDb.EvaluationStep stepData, PlayAudioService service) {
+        public EvaluationStepManager(Context context, Evaluation stepData, PlayAudioService service) {
             mContext = context;
             mTextDirections = stepData.textDirections;
             mChoices = stepData.responseOptions;

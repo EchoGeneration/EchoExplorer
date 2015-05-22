@@ -18,8 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.spencerbarton.echoexplorer.database.TutorialStepTable.TutorialStepTableHelp;
-import com.spencerbarton.echoexplorer.database.TutorialStepTable.TutorialStep;
+import com.spencerbarton.echoexplorer.database.Tutorial;
+import com.spencerbarton.echoexplorer.database.TutorialTable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
     private SwipeGestureDetector mSwipeGestureDetector;
     private LessonManager mLessonManager;
     private String mTutorialName = "";
-    private List<TutorialStep> mStepsData;
+    private Tutorial[] mStepsData;
     private List<TutorialStepManager> mStepManagers;
     private int mCurStep = 0;
 
@@ -61,7 +61,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
 
         // Get tutorial steps
         try {
-            TutorialStepTableHelp tutorialStepTable = new TutorialStepTableHelp(this);
+            TutorialTable tutorialStepTable = new TutorialTable(this);
 
             // Get sorted steps
             mStepsData = tutorialStepTable.getAllRows(lessonNumber);
@@ -231,7 +231,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
         if (mIsBound) {
 
             mStepManagers = new ArrayList<>();
-            for (TutorialStep step : mStepsData) {
+            for (Tutorial step : mStepsData) {
                 mStepManagers.add(new TutorialStepManager(step, mService));
             }
 
@@ -249,7 +249,7 @@ public class TutorialActivity extends ActionBarActivity implements SwipeGestureD
         private boolean mDirectionsPlayed = false;
         private PlayAudioService mAudioService;
 
-        public TutorialStepManager(TutorialStep stepData, PlayAudioService service) {
+        public TutorialStepManager(Tutorial stepData, PlayAudioService service) {
             mTextDirections = stepData.textDirections;
             mAudioService = service;
 

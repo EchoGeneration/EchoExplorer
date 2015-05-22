@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.spencerbarton.echoexplorer.database.Lesson;
 import com.spencerbarton.echoexplorer.database.LessonTable;
-import com.spencerbarton.echoexplorer.database.LessonTable.LessonTableHelp;
-import com.spencerbarton.echoexplorer.database.LessonTable.Lesson;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * This object is intended to aid with moving between tutorials and evaluations in order to abstract
@@ -24,7 +22,7 @@ public class LessonManager implements LessonManagerStarter{
     public static final String EXTRA_LESSON_NUMBER = "com.spencerbarton.echoexplorer.EXTRA_LESSON_NUMBER";
     public static final String EXTRA_LESSON_NAME = "com.spencerbarton.echoexplorer.EXTRA_LESSON_NAME";
     private static final String TAG = "ActivityManager";
-    private LessonTableHelp mTutorialEvaluationsTable;
+    private LessonTable mTutorialEvaluationsTable;
     private Context mContext;
     private int mLessonNumber;
     private Lesson[] mLessons;
@@ -39,12 +37,9 @@ public class LessonManager implements LessonManagerStarter{
 
         // Load table data
         try {
-            mTutorialEvaluationsTable = new LessonTableHelp(context);
-            List<Lesson> lessons = mTutorialEvaluationsTable.getAllRows();
-            mLessons = new Lesson[lessons.size()];
-            lessons.toArray(mLessons);
+            mTutorialEvaluationsTable = new LessonTable(context);
+            mLessons = mTutorialEvaluationsTable.getAllRows();
         } catch (IOException e) {
-
             // Error so go home
             // TODO better idea
             Log.e(TAG, e.getMessage());

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.spencerbarton.echoexplorer.database.Lesson;
 import com.spencerbarton.echoexplorer.database.LessonTable;
 
 import java.io.IOException;
@@ -47,9 +48,9 @@ public class LessonsMenuActivity extends ActionBarActivity {
         try {
 
             // Load all tutorials and evaluation names
-            LessonTable.LessonTableHelp lessonTableHelp = new LessonTable.LessonTableHelp(this);
-            List<LessonTable.Lesson> lessons = lessonTableHelp.getAllRows();
-            populateListView(lessons);
+            LessonTable lessonTable = new LessonTable(this);
+            Lesson[] lessons = lessonTable.getAllRows();
+            populateListView(Arrays.asList(lessons));
 
         } catch (IOException e) {
 
@@ -85,7 +86,7 @@ public class LessonsMenuActivity extends ActionBarActivity {
     // ListView Details
     //----------------------------------------------------------------------------------------------
 
-    private void populateListView(List<LessonTable.Lesson> lessons) {
+    private void populateListView(List<Lesson> lessons) {
 
         final LessonAdapter adapter = new LessonAdapter(this, lessons);
 
@@ -117,9 +118,9 @@ public class LessonsMenuActivity extends ActionBarActivity {
     private class LessonAdapter extends BaseAdapter {
 
         private LayoutInflater mInflater;
-        private final List<LessonTable.Lesson> mLessons;
+        private final List<Lesson> mLessons;
 
-        public LessonAdapter(Context context, final List<LessonTable.Lesson> lessons) {
+        public LessonAdapter(Context context, final List<Lesson> lessons) {
             mInflater = LayoutInflater.from(context);
             mLessons = lessons;
         }
@@ -136,7 +137,7 @@ public class LessonsMenuActivity extends ActionBarActivity {
 
         @Override
         public long getItemId(int position) {
-            LessonTable.Lesson lesson = (LessonTable.Lesson) getItem(position);
+            Lesson lesson = (Lesson) getItem(position);
             return lesson.lessonNumber;
         }
 
@@ -156,7 +157,7 @@ public class LessonsMenuActivity extends ActionBarActivity {
             TextView textViewDesc = (TextView) convertView.findViewById(R.id.row_lesson_desc);
 
             // Case on type of lesson
-            LessonTable.Lesson lesson = mLessons.get(position);
+            Lesson lesson = mLessons.get(position);
             if (lesson.isTutorial()) {
                 textView.setTextColor(TUTORIAL_COLOR);
                 textViewDesc.setTextColor(TUTORIAL_COLOR);

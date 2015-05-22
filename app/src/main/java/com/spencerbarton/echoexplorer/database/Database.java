@@ -58,7 +58,17 @@ public abstract class Database<T> {
     public T[] unbufferedQuery(String query, String[] args, Class<T> cls)
     {
         Cursor result = bufferedQuery(query, args);
-        return getAllEntries(result, cls);
+
+        if (result.getCount() == 0) {
+            return null;
+        } else {
+            return getAllEntries(result, cls);
+        }
+    }
+
+    // Provides a convenient wrapper to access a column
+    public static String getColumnByName(Cursor dbCursor, String colName) {
+        return dbCursor.getString(dbCursor.getColumnIndex(colName));
     }
 
     public T[] getAllEntries(Cursor cursor, Class<T> cls)
@@ -70,6 +80,7 @@ public abstract class Database<T> {
         while (!cursor.isAfterLast()) {
             results[i] = packCursorEntry(cursor);
             cursor.moveToNext();
+            i++;
         }
 
         return results;
@@ -88,7 +99,7 @@ public abstract class Database<T> {
         String dbPath = DB_DIR + dbName;
 
         /* If the database does not exist, then copy it in from the assets folder. Make sure that
-         * the parent directory exists, and create it if it does not.
+         * the parent directory exists, and create it if it does not exist.
          */
         File dbFile = new File(dbPath);
         if (!dbFile.exists()) {
