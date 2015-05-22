@@ -89,7 +89,7 @@ public class TutorialTable extends Database<Tutorial> {
                 "ORDER BY " + STEP_NUMBER_COL + " ASC";
 
         String[] args = {Integer.toString(lessonNumber)};
-        Tutorial[] result = unbufferedQuery(query, null, Tutorial.class);
+        Tutorial[] result = unbufferedQuery(query, args, Tutorial.class);
         Log.i(TAG +".getTutorials", "Querying for all steps of tutorial " +
                 Integer.toString(lessonNumber));
 

@@ -20,7 +20,7 @@ public class EvaluationTable extends Database<Evaluation> {
 
     // The name of the database and table
     private static final String DB_NAME = "LessonDatabase";
-    private static final String TABLE_NAME = "Evaluation";
+    private static final String TABLE_NAME = "EvaluationStep";
 
     // The columns of the table
     private static final String _idCol = "_id";

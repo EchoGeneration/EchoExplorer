@@ -75,6 +75,9 @@ public abstract class Database<T> {
     {
         T[] results = (T[]) Array.newInstance(cls, cursor.getCount());
 
+        // Move to the first result in the cursor
+        cursor.moveToFirst();
+
         // Iterate over the entries, and collect them into an array
         int i = 0;
         while (!cursor.isAfterLast()) {
