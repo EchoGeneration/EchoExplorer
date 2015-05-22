@@ -2,123 +2,75 @@ package com.spencerbarton.echoexplorer.database;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.List;
 
-/* This class encapsulates the functionality for making queries on the Lesson table. The Lesson
- * table contains metadata about lessons, which are groups of tutorials or evaluations. It contains
- * the name of the tutorial, which lesson number it is, and whether the lesson is a set of
- * tutorials or evaluations. The lesson number is used to search the TutorialStep or Evaluation
- * step table, which is used to retrieve all the steps in a lesson.
+
+/* This class represents the Lesson table in the Tutorial Database, and implements opening
+ * and querying the table for data.
  */
-public class LessonTable {
+public class LessonTable extends Database<Lesson> {
 
-    /* This class represents the Lesson table in the Tutorial Database, and implements opening
-     * and querying the table for data.
+    // A tag for logging messages
+    private static final String TAG = LessonTable.class.getName();
+
+    // The name of the database and table
+    private static final String DB_NAME = "LessonDatabase";
+    private static final String TABLE_NAME = "Lesson";
+
+    // The columns of the table
+    private static final String _idCol = "_id";
+    private static final String LESSON_NUMBER_COL = "lessonNumber";
+    private static final String NAME_COL = "name";
+    private static final String TYPE_COL = "type";
+    private static final String DESCRIPTION_COL = "description";
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    // Constructor
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /* The constructor for the an instance of the TutorialEvaluations table. This simply opens
+     * up the corresponding database, and keeps a reference around to it. This function will
+     * throw an SQLiteException if the file on disk is not a database. An IOException will be
+     * thrown if the database cannot be copied from the assets folder.
      */
-    public static class LessonTableHelp implements Databases.Packer<Lesson> {
-
-        // A tag for logging messages
-        private static final String tag = LessonTable.class.getName();
-
-        // The name of the database and table
-        private static final String dbName = "LessonDatabase";
-        private static final String tableName = "Lesson";
-
-        // The columns of the table
-        private static final String _idCol = "_id";
-        private static final String lessonNumberCol = "lessonNumber";
-        private static final String nameCol = "name";
-        private static final String typeCol = "type";
-        private static final String descriptionCol = "description";
-
-        // The database containing the tutorial step table
-        private final SQLiteDatabase tutorialDb;
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Constructor
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        /* The constructor for the an instance of the TutorialEvaluations table. This simply opens
-         * up the corresponding database, and keeps a reference around to it. This function will
-         * throw an SQLiteException if the file on disk is not a database. An IOException will be
-         * thrown if the database cannot be copied from the assets folder.
-         */
-        public LessonTableHelp(Context context) throws SQLiteException, IOException {
-            this.tutorialDb = Databases.StaticDatabase.openDatabase(context, dbName);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////
-        // Public Methods
-        ////////////////////////////////////////////////////////////////////////////////////////////
-
-        /* Given a cursor from a given query on the database, retrieves the row that the cursor
-         * is currently pointing to, and packs the columns into a Lesson structure.
-         * This function is used to conform to the Packer interface.
-         */
-        public Lesson pack(Cursor cursor) {
-
-            int lessonNumber = Integer.parseInt(Databases.CursorHelper.getColumnByName(cursor,
-                    lessonNumberCol));
-            String name = Databases.CursorHelper.getColumnByName(cursor, nameCol);
-            String type = Databases.CursorHelper.getColumnByName(cursor, typeCol);
-            String description = Databases.CursorHelper.getColumnByName(cursor, descriptionCol);
-
-            return new Lesson(lessonNumber, name, type, description);
-        }
-
-        /* This function retrieves all the rows from the Lesson database, and returns it in an
-         * array of Lesson structures, sorted by the lesson number field.
-         */
-        public List<Lesson> getAllRows() {
-            String query = "SELECT * FROM " + tableName + " ORDER BY " + lessonNumberCol + " ASC";
-
-            Cursor cursor = this.tutorialDb.rawQuery(query, null);
-            Log.i(tag + ".getAllEntries", "Querying for all Lesson entries");
-
-            if (!cursor.moveToFirst()) {
-                Log.i(tag + ".getAllEntries", "Query result is empty!");
-                return null;
-            }
-
-            return Databases.CursorHelper.getAllEntries(cursor, this);
-        }
+    public LessonTable(Context context) throws SQLiteException, IOException {
+        super(context, DB_NAME, true);
     }
 
-    /* This class is a structure that represents the data contained in a single row of the Lesson
-     * database.
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    // Public Methods
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+    /* Given a cursor from a given query on the database, retrieves the row that the cursor
+     * is currently pointing to, and packs the columns into a Lesson structure.
+     * This function is used to conform to the Packer interface.
      */
-    public static class Lesson {
+    public Lesson packCursorEntry(Cursor cursor) {
 
-        private static final String EVALUTATION = "evaluation";
-        private static final String TUTORIAL = "tutorial";
+        int lessonNumber = Integer.parseInt(getColumnByName(cursor, LESSON_NUMBER_COL));
+        String name = getColumnByName(cursor, NAME_COL);
+        String type = getColumnByName(cursor, TYPE_COL);
+        String description = getColumnByName(cursor, DESCRIPTION_COL);
 
-        // The columns in a row of the Lesson database
-        public int lessonNumber;
-        public String name;
-        public String type;
-        public String description;
+        return new Lesson(lessonNumber, name, type, description);
+    }
 
-        // The constructor method
-        public Lesson(int lessonNumber, String name, String type, String description)
-        {
-            this.lessonNumber = lessonNumber;
-            this.name = name;
-            this.type = type;
-            this.description = description;
+    /* This function retrieves all the rows from the Lesson database, and returns it in an
+     * array of Lesson structures, sorted by the lesson number field.
+     */
+    public Lesson[] getAllRows() {
+        String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + LESSON_NUMBER_COL + " ASC";
+
+        Lesson[] result = unbufferedQuery(query, null, Lesson.class);
+        Log.i(TAG + ".getAllEntries", "Querying for all Lesson entries");
+
+        if (result == null) {
+            Log.i(TAG + ".getAllEntries", "Query result is empty!");
         }
 
-        public boolean isEvaluation() {
-            return type.equals(EVALUTATION);
-        }
-
-        public boolean isTutorial() {
-            return type.equals(TUTORIAL);
-        }
-
+        return result;
     }
 }
