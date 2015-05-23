@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -32,8 +33,8 @@ import java.util.Scanner;
  * require creating databases in the appropriate directory.
  *
  * The database object is completely opaque, and contains all of the information necessary for
- * accessing a database: the database name, whether or not it is static, and a handle to the
- * SQLiteDatabase object that represents the connection to the database.
+ * accessing a database: a handle to the SQLiteDatabase object that represents the connection to the
+ * database.
  *
  * @author Brandon Perez (bmperez)
  **/
@@ -42,19 +43,11 @@ public abstract class Database<T> {
     // The tag that identifies this class. Used for debugging
     private static final String TAG = Database.class.getName();
 
-    // The directory where database files are stored
-    private static final String DATA_DIR = Environment.getDataDirectory().getAbsolutePath();
-    private static final String DB_DIR = DATA_DIR +
-                                         "/data/com.spencerbarton.echoexplorer/databases/";
-
     // The file path that holds the previous version number, used to detect updates
     private static final String VERSION_FILE_BASE = "_version.txt";
 
     // Dynamic class members
-    private final String mDatabaseName;             // Name of the database
-    private final boolean mStaticDatabase;          // Whether the database is dynamic or static
     private final SQLiteDatabase mDatabase;         // Handle to the database connection
-    private final String mVersionPath;              // The file path to the version of the DB
     private final SQLiteDatabase.CursorFactory mCursorFactory = null; // Cursor factory
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,14 +71,10 @@ public abstract class Database<T> {
     public Database(Context context, String databaseName, boolean staticDatabase) throws
             SQLiteException, IOException
     {
-        mDatabaseName = databaseName;
-        mStaticDatabase = staticDatabase;
-        mVersionPath = DB_DIR + mDatabaseName + VERSION_FILE_BASE;
-
-        if (mStaticDatabase) {
-            this.mDatabase = openStaticDatabase(context, mDatabaseName);
+        if (staticDatabase) {
+            mDatabase = openStaticDatabase(context, databaseName, mCursorFactory);
         } else {
-            this.mDatabase = openDatabase(mDatabaseName);
+            mDatabase = openDatabase(databaseName, context, mCursorFactory);
         }
     }
 
@@ -197,11 +186,13 @@ public abstract class Database<T> {
      * @throws IOException The database file is not writeable or readable, or the dbName does
      *                     does not exist in the assets folder.
      **/
-    private SQLiteDatabase openStaticDatabase(Context context, String dbName) throws
-            SQLiteException, IOException
+    private static SQLiteDatabase openStaticDatabase(Context context, String dbName,
+            SQLiteDatabase.CursorFactory cursorFactory) throws SQLiteException, IOException
     {
         Log.i(TAG, "Opening up database: " + dbName);
-        String dbPath = DB_DIR + dbName;
+        String dbDir = context.getApplicationInfo().dataDir + "/databases/";
+        String dbPath = dbDir + dbName;
+        String versionPath = dbDir + dbName + VERSION_FILE_BASE;
 
         /* If the database does not exist or the application has been updated, then copy it in from
          * the assets folder of the application. Then, update the version file on disk, which tracks
@@ -212,19 +203,19 @@ public abstract class Database<T> {
             Log.i(TAG, "Database does not exist. Copying database in from the assets folder");
 
             // Create the database directory if it does not exist
-            File dbDirectory = new File(DB_DIR);
+            File dbDirectory = new File(dbDir);
             if (!dbDirectory.exists()) {
-                dbDirectory.mkdirs();
+                dbDirectory.mkdir();
             }
             copyDbFromAssets(context, dbName, dbPath);
-            writeVersionFile(mVersionPath);
-        } else if (applicationUpdated(mVersionPath)) {
+            writeVersionFile(versionPath);
+        } else if (applicationUpdated(versionPath)) {
             copyDbFromAssets(context, dbName, dbPath);
-            writeVersionFile(mVersionPath);
+            writeVersionFile(versionPath);
         }
 
         // Open the database
-        return SQLiteDatabase.openDatabase(dbPath, mCursorFactory, SQLiteDatabase.OPEN_READONLY);
+        return SQLiteDatabase.openDatabase(dbPath, cursorFactory, SQLiteDatabase.OPEN_READONLY);
     }
 
     /**
@@ -234,11 +225,14 @@ public abstract class Database<T> {
      * @param dbName The name of the database to open.
      * @return A handle to the SQLiteDatabase object representing the connection to the database.
      **/
-    private SQLiteDatabase openDatabase(String dbName) {
+    private static SQLiteDatabase openDatabase(String dbName, Context context,
+            SQLiteDatabase.CursorFactory cursorFactory)
+    {
         Log.i(TAG, "Opening up database: " + dbName);
-        String dbPath = DB_DIR + dbName;
+        String dbDir = context.getApplicationInfo().dataDir + "/databases/";
+        String dbPath = dbDir + dbName;
 
-        return SQLiteDatabase.openDatabase(dbPath, mCursorFactory, SQLiteDatabase.OPEN_READWRITE);
+        return SQLiteDatabase.openDatabase(dbPath, cursorFactory, SQLiteDatabase.OPEN_READWRITE);
     }
 
     /**
