@@ -37,6 +37,3 @@ proguard/
 .gitconfig
 
 *.iml
-
-# The manifest XML file used for the application
-AndroidManifest.xml
