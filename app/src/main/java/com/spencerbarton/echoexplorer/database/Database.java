@@ -20,8 +20,23 @@ import java.lang.reflect.Array;
 import java.util.Scanner;
 
 /**
- * Created by bmperez on 5/21/15.
- */
+ * Database is an abstract base class for all database objects that implements basic functionality
+ * needed to interact with an SQLite database. This class is inherited by table subclasses, which
+ * organize the queries to the database, and provide the schema definition via packCursorEntry(),
+ * which defines how to extra columns from a cursor object. The user also provides the definition
+ * of a object representing a row of the database via the type paraemter T.
+ *
+ * The database classes handles two types of database static (read-only) databases, and dynamic
+ * databases. This class performs the operations necessary to access a static database that is
+ * provided with the application in the assets folder. It also can handle dynamic database, which
+ * require creating databases in the appropriate directory.
+ *
+ * The database object is completely opaque, and contains all of the information necessary for
+ * accessing a database: the database name, whether or not it is static, and a handle to the
+ * SQLiteDatabase object that represents the connection to the database.
+ *
+ * @author Brandon Perez (bmperez)
+ **/
 public abstract class Database<T> {
 
     // The tag that identifies this class. Used for debugging
@@ -29,7 +44,8 @@ public abstract class Database<T> {
 
     // The directory where database files are stored
     private static final String DATA_DIR = Environment.getDataDirectory().getAbsolutePath();
-    private static final String DB_DIR = DATA_DIR + "/data/com.spencerbarton.echoexplorer/databases/";
+    private static final String DB_DIR = DATA_DIR +
+                                         "/data/com.spencerbarton.echoexplorer/databases/";
 
     // The file path that holds the previous version number, used to detect updates
     private static final String VERSION_FILE_BASE = "_version.txt";
@@ -45,12 +61,26 @@ public abstract class Database<T> {
     // Constructor
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Database(Context context, String mDatabaseName, boolean mStaticDatabase) throws
+    /**
+     * Constructs a new database object using the application's context and the given database
+     * name. If the database is static, then it will be copied from the assets folder if it does
+     * not exist. Otherwise, the database will be created on disk if it does not exist.
+     *
+     * @param context The application's context. Used to access the assets folder of the
+     *                application.
+     * @param databaseName The name of the database file (not the full path, only the basename).
+     *                     This is used to access the assets folder and the local storage.
+     * @param staticDatabase Indicates whether or not this database is static.
+     * @throws SQLiteException The database file is not properly formatted.
+     * @throws IOException The database file is not writeable or readable.
+     **/
+    public Database(Context context, String databaseName, boolean staticDatabase) throws
             SQLiteException, IOException
     {
-        this.mDatabaseName = mDatabaseName;
-        this.mStaticDatabase = mStaticDatabase;
-        this.mVersionPath = DB_DIR + mDatabaseName + VERSION_FILE_BASE;
+        mDatabaseName = databaseName;
+        mStaticDatabase = staticDatabase;
+        mVersionPath = DB_DIR + mDatabaseName + VERSION_FILE_BASE;
+
         if (mStaticDatabase) {
             this.mDatabase = openStaticDatabase(context, mDatabaseName);
         } else {
@@ -62,10 +92,31 @@ public abstract class Database<T> {
     // Public Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    /**
+     * Runs the specified query on the database, and buffers the result of the query in a Cursor
+     * object, which will pull the results from disk as needed. Returns a handle to this Cursor
+     * object.
+     *
+     * @param query The SQL query string.
+     * @param args Arguments passed into the 'WHERE' clause of the query. Each argument must match
+     *             with a corresponding '?' in query.
+     * @return A handle to a cursor object representing the result of the query.
+     **/
     public Cursor bufferedQuery(String query, String[] args)  {
         return mDatabase.rawQuery(query, args);
     }
 
+    /**
+     * Runs the specified query on the database, and returns the results of the query in an array
+     * of the appropriate type representing a row of the table. If the query returns no results,
+     * then null is returned.
+     *
+     * @param query The SQL query string.
+     * @param args Arguments passed into the 'WHERE' clause of the query. Each argument must match
+     *             with a corresponding '?' in query.
+     * @param cls The class object of the type T. Used to create an generic array of type T.
+     * @return The results of the query in an array, or null if the query returns no results.
+     */
     public T[] unbufferedQuery(String query, String[] args, Class<T> cls)
     {
         Cursor result = bufferedQuery(query, args);
@@ -77,11 +128,28 @@ public abstract class Database<T> {
         }
     }
 
+    /**
+     * Provides a convenient wrapper for a Cursor object to access the contents of a column by its
+     * name. Given a cursor object, and a column name, returns the value stored in that column of
+     * the current row pointed to by the cursor.
+     *
+     * @param dbCursor The cursor object with the results of a query.
+     * @param colName The name of the column to access.
+     * @return The value of the given column.
+     */
     // Provides a convenient wrapper to access a column
     public static String getColumnByName(Cursor dbCursor, String colName) {
         return dbCursor.getString(dbCursor.getColumnIndex(colName));
     }
 
+    /**
+     * Given a Cursor object, retrieves all of the entries in the Cursor object and stores them
+     * into a generic array of type T.
+     *
+     * @param cursor The Cursor object to retrieve the entries from.
+     * @param cls The class object of the type T. Used to create an generic array of type T.
+     * @return All of the entries in the Cursor object collected into the array.
+     */
     public T[] getAllEntries(Cursor cursor, Class<T> cls)
     {
         T[] results = (T[]) Array.newInstance(cls, cursor.getCount());
