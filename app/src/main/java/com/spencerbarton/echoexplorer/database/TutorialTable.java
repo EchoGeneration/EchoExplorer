@@ -1,5 +1,6 @@
 package com.spencerbarton.echoexplorer.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -38,7 +39,7 @@ public class TutorialTable extends Database<Tutorial> {
     }
 
     // Given a cursor, retrieves all the columns and packs them into a Tutorial Step structure
-    public Tutorial packCursorEntry(Cursor cursor) {
+    public Tutorial packRow(Cursor cursor) {
         int lessonNumber = Integer.parseInt(getColumnByName(cursor, LESSON_NUMBER_COL));
         int stepNumber = Integer.parseInt(getColumnByName(cursor, STEP_NUMBER_COL));
         String audioDirFile = getColumnByName(cursor, AUDIO_DIR_COL);
@@ -46,6 +47,19 @@ public class TutorialTable extends Database<Tutorial> {
         String textDirections = getColumnByName(cursor, TEXT_DIRECTIONS_COL);
 
         return new Tutorial(lessonNumber, stepNumber, audioDirFile, echoFile, textDirections);
+    }
+
+    public ContentValues unpackRow(Tutorial tutorial)
+    {
+        ContentValues mapping = new ContentValues();
+
+        mapping.put(LESSON_NUMBER_COL, Integer.toString(tutorial.lessonNumber));
+        mapping.put(STEP_NUMBER_COL, Integer.toString(tutorial.stepNumber));
+        mapping.put(AUDIO_DIR_COL, tutorial.audioDirFile);
+        mapping.put(ECHO_COL, tutorial.echoFile);
+        mapping.put(TEXT_DIRECTIONS_COL, tutorial.textDirections);
+
+        return mapping;
     }
 
     // Given a lesson number and a step, retrieves a given step of a tutorial

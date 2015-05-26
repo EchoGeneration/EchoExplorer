@@ -1,5 +1,6 @@
 package com.spencerbarton.echoexplorer.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -7,9 +8,17 @@ import android.util.Log;
 
 import java.io.IOException;
 
-
-/* This class represents the Lesson table in the Tutorial Database, and implements opening
- * and querying the table for data.
+/**
+ * LessonTable is a class that provides the interface to interacting with the Lesson table in
+ * the LessonDatabase. The Lesson table stores all of the data about Lessons in the application.
+ * Lessons are either Tutorials or Evaluations, which consist of a series of steps that are used
+ * to teach or evaluate a particular type of echo.
+ *
+ * The Lesson table has the following schema:
+ *
+ * Lesson(_id, lessonNumber, name, type, description)
+ *
+ * @author Brandon Perez (bmperez)
  */
 public class LessonTable extends Database<Lesson> {
 
@@ -48,7 +57,7 @@ public class LessonTable extends Database<Lesson> {
      * is currently pointing to, and packs the columns into a Lesson structure.
      * This function is used to conform to the Packer interface.
      */
-    public Lesson packCursorEntry(Cursor cursor) {
+    public Lesson packRow(Cursor cursor) {
 
         int lessonNumber = Integer.parseInt(getColumnByName(cursor, LESSON_NUMBER_COL));
         String name = getColumnByName(cursor, NAME_COL);
@@ -56,6 +65,18 @@ public class LessonTable extends Database<Lesson> {
         String description = getColumnByName(cursor, DESCRIPTION_COL);
 
         return new Lesson(lessonNumber, name, type, description);
+    }
+
+    public ContentValues unpackRow(Lesson lesson)
+    {
+        ContentValues mapping = new ContentValues();
+
+        mapping.put(LESSON_NUMBER_COL, Integer.toString(lesson.lessonNumber));
+        mapping.put(NAME_COL, lesson.name);
+        mapping.put(TYPE_COL, lesson.type);
+        mapping.put(DESCRIPTION_COL, lesson.description);
+
+        return mapping;
     }
 
     /* This function retrieves all the rows from the Lesson database, and returns it in an

@@ -1,5 +1,6 @@
 package com.spencerbarton.echoexplorer.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -37,8 +38,8 @@ public class EvaluationTable extends Database<Evaluation> {
         super(context, DB_NAME, true);
     }
 
-    // Given a cursor, retrieves all the columns and packs them into a Tutorial Step structure
-    public Evaluation packCursorEntry(Cursor cursor) {
+    // Given a cursor, retrieves all the columns and packs them into a evaluation Step structure
+    public Evaluation packRow(Cursor cursor) {
 
         int lessonNumber = Integer.parseInt(getColumnByName(cursor,
                 LESSON_NUMBER_COL));
@@ -54,8 +55,23 @@ public class EvaluationTable extends Database<Evaluation> {
         return new Evaluation(lessonNumber, stepNumber, audioDirFile, echoFile, textDir,
                 responseOptions, correctResponse);
     }
+    
+    public ContentValues unpackRow(Evaluation evaluation)
+    {
+        ContentValues mapping = new ContentValues();
 
-    // Given a lesson number and a step, retrieves a given step of a tutorial
+        mapping.put(LESSON_NUMBER_COL, Integer.toString(evaluation.lessonNumber));
+        mapping.put(STEP_NUMBER_COL, Integer.toString(evaluation.stepNumber));
+        mapping.put(AUDIO_DIR_COL, evaluation.directionsAudioFile);
+        mapping.put(ECHO_COL, evaluation.echoAudioFile);
+        mapping.put(TEXT_DIR_COL, evaluation.textDirections);
+        // FIXME: Need to convert response options back to a JSON string
+        mapping.put(RESPONSE_OPT_COL, "");
+        mapping.put(CORRECT_RESPONSE_COL, evaluation.correctResponse);
+
+        return mapping;
+    }
+    // Given a lesson number and a step, retrieves a given step of a evaluation
     public Evaluation getRow(int lessonNumber, int stepNumber) {
         String query = "SELECT * FROM " + TABLE_NAME + " where " + LESSON_NUMBER_COL + " = ? and "+
                 STEP_NUMBER_COL + " = ?";
@@ -65,7 +81,7 @@ public class EvaluationTable extends Database<Evaluation> {
         Log.e(TAG +".getRow", "Querying for row with lessonId=" + Integer.toString(lessonNumber)+
                 " and stepNumber=" + Integer.toString(stepNumber));
 
-        // The cursor is empty, then the tutorial does not exist
+        // The cursor is empty, then the evaluation does not exist
         if (result == null) {
             Log.e(TAG +".getRow", "Query result is empty!");
             return null;
@@ -74,23 +90,23 @@ public class EvaluationTable extends Database<Evaluation> {
         return result[0];
     }
 
-    // Gets a list of all the tutorials, sorted by lessonId, then by step number
+    // Gets a list of all the evaluations, sorted by lessonId, then by step number
     public Evaluation[] getAllRows() {
         String query = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + LESSON_NUMBER_COL + " ASC, "
                 + " ASC";
 
         Evaluation[] result = unbufferedQuery(query, null, Evaluation.class);
-        Log.e(TAG +".getTutorials", "Querying for all tutorial steps");
+        Log.e(TAG +".getevaluations", "Querying for all evaluation steps");
 
         // The cursor is empty, the table is empty
         if (result == null) {
-            Log.e(TAG +".getTutorials", "Query result is empty!");
+            Log.e(TAG +".getevaluations", "Query result is empty!");
         }
 
         return result;
     }
 
-    // Given a lesson number, returns the tutorials in order of their steps
+    // Given a lesson number, returns the evaluations in order of their steps
     public Evaluation[] getAllRows(int lessonNumber) {
         String query = "SELECT * FROM " + TABLE_NAME + " where " + LESSON_NUMBER_COL + " = ? " +
                 "ORDER BY " + STEP_NUMBER_COL + " ASC";
@@ -98,12 +114,12 @@ public class EvaluationTable extends Database<Evaluation> {
         String[] args = {Integer.toString(lessonNumber)};
         Evaluation[] result = unbufferedQuery(query, args, Evaluation.class);
 
-        Log.i(TAG +".getTutorials", "Querying for all steps of tutorial " +
+        Log.i(TAG +".getevaluations", "Querying for all steps of evaluation " +
                 Integer.toString(lessonNumber));
 
         // The cursor is empty, the table is empty
         if (result == null) {
-            Log.e(TAG +".getTutorials", "Query result is empty!");
+            Log.e(TAG +".getevaluations", "Query result is empty!");
         }
 
         return result;

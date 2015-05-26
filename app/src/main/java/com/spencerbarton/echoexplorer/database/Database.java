@@ -1,5 +1,6 @@
 package com.spencerbarton.echoexplorer.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,7 +26,7 @@ import java.util.Scanner;
  * needed to interact with an SQLite database. This class is inherited by table subclasses, which
  * organize the queries to the database, and provide the schema definition via packCursorEntry(),
  * which defines how to extra columns from a cursor object. The user also provides the definition
- * of a object representing a row of the database via the type paraemter T.
+ * of a object representing a row of the database via the type parameter T.
  *
  * The database classes handles two types of databases: static (read-only) databases, and dynamic
  * databases. This class performs the operations necessary to access a static database that is
@@ -151,12 +152,48 @@ public abstract class Database<T> {
         // Iterate over the entries, and collect them into an array
         int i = 0;
         while (!cursor.isAfterLast()) {
-            results[i] = packCursorEntry(cursor);
+            results[i] = packRow(cursor);
             cursor.moveToNext();
             i++;
         }
 
         return results;
+    }
+
+    /**
+     * Inserts the given row entry into the specified table. Throws an SQLite exception if any error
+     * occurs while the entry is being inserted into the table.
+     *
+     * @param table The table to insert into.
+     * @param row The row entry to insert into the table.
+     * @throws SQLiteException The insertion is unsuccessful for any reason.
+     */
+    public void insertRow(String table, T row) throws SQLiteException
+    {
+        ContentValues mapping = unpackRow(row);
+
+        if (mDatabase.insert(table, null, mapping) == -1) {
+            throw new SQLiteException();
+        }
+    }
+
+    /**
+     * Deletes the entries from the given table that match the specified where clause, with the
+     * given arguments for the where clause. Throws an SQLite exception if no entries are deleted.
+     *
+     * @param table The table to delete entries from.
+     * @param whereClause The WHERE clause of the query, used to match entries in the database to
+     *                    delete. Any '?' in the string will be replaced with the corresponding
+     *                    entry in the whereArgs.
+     * @param whereArgs The arguments to use for the WHERE clause. There must be exactly as many
+     *                  entries in this array as there are '?' in the whereClause.
+     * @throws SQLiteException
+     */
+    public void delete(String table, String whereClause, String[] whereArgs) throws SQLiteException
+    {
+        if (mDatabase.delete(table, whereClause, whereArgs) == 0) {
+            throw new SQLiteException();
+        }
     }
 
     /**
@@ -167,7 +204,19 @@ public abstract class Database<T> {
      * @param cursor The Cursor object to pack an entry into type T.
      * @return The next entry in the cursor, with the columns of the result packed into the type T.
      **/
-    public abstract T packCursorEntry(Cursor cursor);
+    public abstract T packRow(Cursor cursor);
+
+    /**
+     * The abstract method which takes a packed row from the table, of the generic type T, and
+     * converts it into a ContentValues object (dictionary). The keys of the dictionary should be
+     * the column names, and the values should be the values of the attributes of T. The subclasses
+     * must implement this method.
+     *
+     * @param row A row from the table to convert into a dictionary
+     * @return A ContentValues (dictionary) object, where each column name maps to the corresponding
+     * value in the row of type T.
+     */
+    public abstract ContentValues unpackRow(T row);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Private Methods
