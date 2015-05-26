@@ -27,7 +27,7 @@ import java.util.Scanner;
  * which defines how to extra columns from a cursor object. The user also provides the definition
  * of a object representing a row of the database via the type paraemter T.
  *
- * The database classes handles two types of database static (read-only) databases, and dynamic
+ * The database classes handles two types of databases: static (read-only) databases, and dynamic
  * databases. This class performs the operations necessary to access a static database that is
  * provided with the application in the assets folder. It also can handle dynamic database, which
  * require creating databases in the appropriate directory.
@@ -40,15 +40,16 @@ import java.util.Scanner;
  **/
 public abstract class Database<T> {
 
-    // The tag that identifies this class. Used for debugging
+    /** The tag that identifies this class. Used for debugging. */
     private static final String TAG = Database.class.getName();
 
-    // The file path that holds the previous version number, used to detect updates
+    /** The suffix to append to database paths to get the version file. */
     private static final String VERSION_FILE_BASE = "_version.txt";
 
-    // Dynamic class members
-    private final SQLiteDatabase mDatabase;         // Handle to the database connection
-    private final SQLiteDatabase.CursorFactory mCursorFactory = null; // Cursor factory
+    /** The handle to the SQLiteDatabase object representing the connection to the database.. */
+    private final SQLiteDatabase mDatabase;
+    /** The cursor factory that is used for custom cursors. */
+    private final SQLiteDatabase.CursorFactory mCursorFactory = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Constructor
@@ -66,7 +67,7 @@ public abstract class Database<T> {
      * @param staticDatabase Indicates whether or not this database is static.
      * @throws SQLiteException The database file is not properly formatted.
      * @throws IOException The database file is not writeable or readable, or the dbName does
-     *                     does not exist in the assets folder.
+     *                     does not exist in the assets folder (if the database is static).
      **/
     public Database(Context context, String databaseName, boolean staticDatabase) throws
             SQLiteException, IOException
@@ -277,7 +278,7 @@ public abstract class Database<T> {
      * @param context The application's context. Used to access the assets folder of the
      *                application.
      * @param dbName The name of the database to open from the assets folder.
-     * @return A handle to the open file corresponding to the dbName file in the assests folder.
+     * @return A handle to the open file corresponding to the dbName file in the assets folder.
      * @throws IOException The file dbName does not exist in the assets folder.
      */
     private static InputStream openDbFromAssets(Context context, String dbName) throws IOException {
