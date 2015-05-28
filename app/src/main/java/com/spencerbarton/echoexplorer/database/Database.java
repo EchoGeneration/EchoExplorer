@@ -38,6 +38,7 @@ import java.util.Scanner;
  * database.
  *
  * @author Brandon Perez (bmperez)
+ * @author Spencer Barton (sbarton)
  **/
 public abstract class Database<T> {
 
@@ -52,9 +53,9 @@ public abstract class Database<T> {
     /** The cursor factory that is used for custom cursors. */
     private final SQLiteDatabase.CursorFactory mCursorFactory = null;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
     // Constructor
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
 
     /**
      * Constructs a new database object using the application's context and the given database
@@ -80,9 +81,9 @@ public abstract class Database<T> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
     // Public Methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
 
     /**
      * Runs the specified query on the database, and buffers the result of the query in a Cursor
@@ -167,7 +168,7 @@ public abstract class Database<T> {
      * @param table The table to insert into.
      * @param row The row entry to insert into the table.
      * @throws SQLiteException The insertion is unsuccessful for any reason.
-     */
+     **/
     public void insertRow(String table, T row) throws SQLiteException
     {
         ContentValues mapping = unpackRow(row);
@@ -187,8 +188,8 @@ public abstract class Database<T> {
      *                    entry in the whereArgs.
      * @param whereArgs The arguments to use for the WHERE clause. There must be exactly as many
      *                  entries in this array as there are '?' in the whereClause.
-     * @throws SQLiteException
-     */
+     * @throws SQLiteException The deletion is unsuccessful for any reason.
+     **/
     public void delete(String table, String whereClause, String[] whereArgs) throws SQLiteException
     {
         if (mDatabase.delete(table, whereClause, whereArgs) == 0) {
@@ -214,13 +215,13 @@ public abstract class Database<T> {
      *
      * @param row A row from the table to convert into a dictionary
      * @return A ContentValues (dictionary) object, where each column name maps to the corresponding
-     * value in the row of type T.
-     */
+     *         value in the row of type T.
+     **/
     public abstract ContentValues unpackRow(T row);
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
     // Private Methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
 
     /**
      * Opens up the static, readonly database corresponding to dbName. If the database does not
@@ -320,7 +321,6 @@ public abstract class Database<T> {
         source.close();
     }
 
-
     /**
      * Opens the database in the assets folder corresponding to dbName.
      *
@@ -329,7 +329,7 @@ public abstract class Database<T> {
      * @param dbName The name of the database to open from the assets folder.
      * @return A handle to the open file corresponding to the dbName file in the assets folder.
      * @throws IOException The file dbName does not exist in the assets folder.
-     */
+     **/
     private static InputStream openDbFromAssets(Context context, String dbName) throws IOException {
         return context.getAssets().open(dbName);
     }
@@ -345,7 +345,7 @@ public abstract class Database<T> {
      *                    the last time it was run.
      * @return True if the application has been updated (or is new), false otherwise.
      * @throws FileNotFoundException This exception will never be thrown.
-     */
+     **/
     private static boolean applicationUpdated(String versionPath) throws FileNotFoundException
     {
         File versionFile = new File(versionPath);
@@ -370,7 +370,7 @@ public abstract class Database<T> {
      *
      * @param versionPath The path to the version file.
      * @throws IOException The version file is not readable or writeable.
-     */
+     **/
     private static void writeVersionFile(String versionPath) throws IOException
     {
         // Get the current application version.
