@@ -25,11 +25,7 @@ import java.util.Scanner;
  * Database is an abstract base class for all database objects that implements basic functionality
  * needed to interact with an SQLite database. This class is inherited by table subclasses, which
  * organize the queries to the database, and provide the schema definition via packCursorEntry(),
-<<<<<<< HEAD
  * which defines how to extract columns from a cursor object. The user also provides the definition
-=======
- * which defines how to extra columns from a cursor object. The user also provides the definition
->>>>>>> 3d8854b99f6da17b25dbc70a52b3adab2ee0123d
  * of a object representing a row of the database via the type parameter T.
  *
  * The database classes handles two types of databases: static (read-only) databases, and dynamic
@@ -223,13 +219,7 @@ public abstract class Database<T> {
      **/
     public abstract ContentValues unpackRow(T row);
 
-<<<<<<< HEAD
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-=======
     //----------------------------------------------------------------------------------------------
->>>>>>> 3d8854b99f6da17b25dbc70a52b3adab2ee0123d
     // Private Methods
     //----------------------------------------------------------------------------------------------
 
