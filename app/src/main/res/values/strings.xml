@@ -24,5 +24,7 @@
     <string name="echo_btn">Echo</string>
     <string name="next_btn">Next</string>
     <string name="prev_btn">Previous</string>
+    <string name="records">Records</string>
+    <string name="title_activity_records">Records</string>
 
 </resources>

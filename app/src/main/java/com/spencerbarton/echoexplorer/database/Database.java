@@ -24,8 +24,8 @@ import java.util.Scanner;
  * Database is an abstract base class for all database objects that implements basic functionality
  * needed to interact with an SQLite database. This class is inherited by table subclasses, which
  * organize the queries to the database, and provide the schema definition via packCursorEntry(),
- * which defines how to extra columns from a cursor object. The user also provides the definition
- * of a object representing a row of the database via the type paraemter T.
+ * which defines how to extract columns from a cursor object. The user also provides the definition
+ * of a object representing a row of the database via the type parameter T.
  *
  * The database classes handles two types of database static (read-only) databases, and dynamic
  * databases. This class performs the operations necessary to access a static database that is
@@ -168,6 +168,8 @@ public abstract class Database<T> {
      **/
     public abstract T packCursorEntry(Cursor cursor);
 
+
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Private Methods
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,7 +221,7 @@ public abstract class Database<T> {
     }
 
     /**
-     * Opens up a dynamic, writeable database corresponding to dbName. If the database does not
+     * Opens up a dynamic, writable database corresponding to dbName. If the database does not
      * exist on disk, then it is created.
      *
      * @param dbName The name of the database to open.
@@ -277,7 +279,7 @@ public abstract class Database<T> {
      * @param context The application's context. Used to access the assets folder of the
      *                application.
      * @param dbName The name of the database to open from the assets folder.
-     * @return A handle to the open file corresponding to the dbName file in the assests folder.
+     * @return A handle to the open file corresponding to the dbName file in the assets folder.
      * @throws IOException The file dbName does not exist in the assets folder.
      */
     private static InputStream openDbFromAssets(Context context, String dbName) throws IOException {

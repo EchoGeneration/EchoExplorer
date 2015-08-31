@@ -24,10 +24,14 @@ import android.widget.Toast;
 
 import com.spencerbarton.echoexplorer.database.Evaluation;
 import com.spencerbarton.echoexplorer.database.EvaluationTable;
+import com.spencerbarton.echoexplorer.database.UserStats;
+import com.spencerbarton.echoexplorer.database.UserStatsTable;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,6 +45,7 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
     private Evaluation[] mStepsData;
     private List<EvaluationStepManager> mStepManagers;
     private int mCurStep = 0;
+    private UserStatsTable db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,7 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         }
 
         onCreateAudio();
+        db = new UserStatsTable(this);
     }
 
     @Override
@@ -258,13 +264,14 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
         private boolean mDirectionsPlayed = false;
         private PlayAudioService mAudioService;
         private Context mContext;
-
+        private int mCurStepTest;
         public EvaluationStepManager(Context context, Evaluation stepData, PlayAudioService service) {
             mContext = context;
             mTextDirections = stepData.textDirections;
             mChoices = stepData.responseOptions;
             mCorrectChoice = stepData.correctResponse;
             mAudioService = service;
+            mCurStepTest = stepData.stepNumber;
 
             // Get resource ids
             mDirectionsAudioFile = EvaluationActivity.this.getResources().getIdentifier(
@@ -335,6 +342,9 @@ public class EvaluationActivity extends ActionBarActivity implements SwipeGestur
                     @Override
                     public void onClick(View v) {
                         if (mDirectionsPlayed) {
+                            int time = (int) (System.currentTimeMillis());
+                            UserStats response = new UserStats(time,mCurStepTest,Integer.toString(curChoice));
+                            db.add(response);
                             if (curChoice == mCorrectChoice) {
                                 toast(CORRECT_ANSWER);
                                 goToNextStep();
