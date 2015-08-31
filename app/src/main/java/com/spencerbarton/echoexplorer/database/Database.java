@@ -1,5 +1,6 @@
 package com.spencerbarton.echoexplorer.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,10 +25,14 @@ import java.util.Scanner;
  * Database is an abstract base class for all database objects that implements basic functionality
  * needed to interact with an SQLite database. This class is inherited by table subclasses, which
  * organize the queries to the database, and provide the schema definition via packCursorEntry(),
+<<<<<<< HEAD
  * which defines how to extract columns from a cursor object. The user also provides the definition
+=======
+ * which defines how to extra columns from a cursor object. The user also provides the definition
+>>>>>>> 3d8854b99f6da17b25dbc70a52b3adab2ee0123d
  * of a object representing a row of the database via the type parameter T.
  *
- * The database classes handles two types of database static (read-only) databases, and dynamic
+ * The database classes handles two types of databases: static (read-only) databases, and dynamic
  * databases. This class performs the operations necessary to access a static database that is
  * provided with the application in the assets folder. It also can handle dynamic database, which
  * require creating databases in the appropriate directory.
@@ -37,22 +42,24 @@ import java.util.Scanner;
  * database.
  *
  * @author Brandon Perez (bmperez)
+ * @author Spencer Barton (sbarton)
  **/
 public abstract class Database<T> {
 
-    // The tag that identifies this class. Used for debugging
+    /** The tag that identifies this class. Used for debugging. */
     private static final String TAG = Database.class.getName();
 
-    // The file path that holds the previous version number, used to detect updates
+    /** The suffix to append to database paths to get the version file. */
     private static final String VERSION_FILE_BASE = "_version.txt";
 
-    // Dynamic class members
-    private final SQLiteDatabase mDatabase;         // Handle to the database connection
-    private final SQLiteDatabase.CursorFactory mCursorFactory = null; // Cursor factory
+    /** The handle to the SQLiteDatabase object representing the connection to the database.. */
+    private final SQLiteDatabase mDatabase;
+    /** The cursor factory that is used for custom cursors. */
+    private final SQLiteDatabase.CursorFactory mCursorFactory = null;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
     // Constructor
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
 
     /**
      * Constructs a new database object using the application's context and the given database
@@ -66,7 +73,7 @@ public abstract class Database<T> {
      * @param staticDatabase Indicates whether or not this database is static.
      * @throws SQLiteException The database file is not properly formatted.
      * @throws IOException The database file is not writeable or readable, or the dbName does
-     *                     does not exist in the assets folder.
+     *                     does not exist in the assets folder (if the database is static).
      **/
     public Database(Context context, String databaseName, boolean staticDatabase) throws
             SQLiteException, IOException
@@ -78,9 +85,9 @@ public abstract class Database<T> {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
     // Public Methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
 
     /**
      * Runs the specified query on the database, and buffers the result of the query in a Cursor
@@ -150,12 +157,48 @@ public abstract class Database<T> {
         // Iterate over the entries, and collect them into an array
         int i = 0;
         while (!cursor.isAfterLast()) {
-            results[i] = packCursorEntry(cursor);
+            results[i] = packRow(cursor);
             cursor.moveToNext();
             i++;
         }
 
         return results;
+    }
+
+    /**
+     * Inserts the given row entry into the specified table. Throws an SQLite exception if any error
+     * occurs while the entry is being inserted into the table.
+     *
+     * @param table The table to insert into.
+     * @param row The row entry to insert into the table.
+     * @throws SQLiteException The insertion is unsuccessful for any reason.
+     **/
+    public void insertRow(String table, T row) throws SQLiteException
+    {
+        ContentValues mapping = unpackRow(row);
+
+        if (mDatabase.insert(table, null, mapping) == -1) {
+            throw new SQLiteException();
+        }
+    }
+
+    /**
+     * Deletes the entries from the given table that match the specified where clause, with the
+     * given arguments for the where clause. Throws an SQLite exception if no entries are deleted.
+     *
+     * @param table The table to delete entries from.
+     * @param whereClause The WHERE clause of the query, used to match entries in the database to
+     *                    delete. Any '?' in the string will be replaced with the corresponding
+     *                    entry in the whereArgs.
+     * @param whereArgs The arguments to use for the WHERE clause. There must be exactly as many
+     *                  entries in this array as there are '?' in the whereClause.
+     * @throws SQLiteException The deletion is unsuccessful for any reason.
+     **/
+    public void delete(String table, String whereClause, String[] whereArgs) throws SQLiteException
+    {
+        if (mDatabase.delete(table, whereClause, whereArgs) == 0) {
+            throw new SQLiteException();
+        }
     }
 
     /**
@@ -166,13 +209,29 @@ public abstract class Database<T> {
      * @param cursor The Cursor object to pack an entry into type T.
      * @return The next entry in the cursor, with the columns of the result packed into the type T.
      **/
-    public abstract T packCursorEntry(Cursor cursor);
+    public abstract T packRow(Cursor cursor);
 
+    /**
+     * The abstract method which takes a packed row from the table, of the generic type T, and
+     * converts it into a ContentValues object (dictionary). The keys of the dictionary should be
+     * the column names, and the values should be the values of the attributes of T. The subclasses
+     * must implement this method.
+     *
+     * @param row A row from the table to convert into a dictionary
+     * @return A ContentValues (dictionary) object, where each column name maps to the corresponding
+     *         value in the row of type T.
+     **/
+    public abstract ContentValues unpackRow(T row);
+
+<<<<<<< HEAD
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
+=======
+    //----------------------------------------------------------------------------------------------
+>>>>>>> 3d8854b99f6da17b25dbc70a52b3adab2ee0123d
     // Private Methods
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //----------------------------------------------------------------------------------------------
 
     /**
      * Opens up the static, readonly database corresponding to dbName. If the database does not
@@ -272,7 +331,6 @@ public abstract class Database<T> {
         source.close();
     }
 
-
     /**
      * Opens the database in the assets folder corresponding to dbName.
      *
@@ -281,7 +339,7 @@ public abstract class Database<T> {
      * @param dbName The name of the database to open from the assets folder.
      * @return A handle to the open file corresponding to the dbName file in the assets folder.
      * @throws IOException The file dbName does not exist in the assets folder.
-     */
+     **/
     private static InputStream openDbFromAssets(Context context, String dbName) throws IOException {
         return context.getAssets().open(dbName);
     }
@@ -297,7 +355,7 @@ public abstract class Database<T> {
      *                    the last time it was run.
      * @return True if the application has been updated (or is new), false otherwise.
      * @throws FileNotFoundException This exception will never be thrown.
-     */
+     **/
     private static boolean applicationUpdated(String versionPath) throws FileNotFoundException
     {
         File versionFile = new File(versionPath);
@@ -322,7 +380,7 @@ public abstract class Database<T> {
      *
      * @param versionPath The path to the version file.
      * @throws IOException The version file is not readable or writeable.
-     */
+     **/
     private static void writeVersionFile(String versionPath) throws IOException
     {
         // Get the current application version.
